@@ -40,7 +40,7 @@ export const constantRoutes = [
     
   },
   {
-    path: '/',
+    path: '/version',
     component: Layout,
     redirect: '/version',
     children:[
@@ -59,6 +59,7 @@ export const constantRoutes = [
   {
     path:'/config',
     component:Layout,
+    meta:{title:'Config'},
     children:[
       {
         path:'suitconfig',

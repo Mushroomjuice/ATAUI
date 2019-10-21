@@ -4,11 +4,25 @@
 
         <template v-if="hasoneshowingchildren(item.children,item)">
             <Applink v-if="onlyOneChild.meta" :pathtogo="resolvePath(onlyOneChild.path)">
-                haha将对应的组件名称显示在这里
+                <el-menu-item :index="resolvePath(onlyOneChild.path)">
+                    <item :title="onlyOneChild.meta.title" />
+                </el-menu-item>
             </Applink>
             
         </template>
-
+        <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
+        <template slot="title">
+            <item v-if="item.meta" :title="item.meta.title" />
+        </template>
+        <sidebar-item
+            v-for="child in item.children"
+            :key="child.path"
+            :is-nest="true"
+            :item="child"
+            :base-path="resolvePath(child.path)"
+            class="nest-menu"
+        />
+        </el-submenu>
 
 
 
@@ -21,6 +35,7 @@
 <script>
     import path from 'path'
     import Applink from './AppLink'
+    import Item from './Item'
     export default {
         name: 'SidebarItem',
         props: {
@@ -40,6 +55,7 @@
         },
         components:{
             Applink,
+            Item
         },
 
         data (){
