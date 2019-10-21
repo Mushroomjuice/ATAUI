@@ -30,7 +30,7 @@ export const constantRoutes = [
         path:'dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         name:'dashboard',
-        meta:{title:'dashboard'}
+        meta:{ title:'dashboard', icon:'email'}
 
       },
       
@@ -48,7 +48,7 @@ export const constantRoutes = [
         path:'version',
         component: () => import('@/views/version/index.vue'),
         name:'version',
-        meta:{title:'version'}
+        meta:{title:'version',icon:'email'}
 
       },
       

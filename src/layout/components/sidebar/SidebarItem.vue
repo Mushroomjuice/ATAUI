@@ -5,14 +5,14 @@
         <template v-if="hasoneshowingchildren(item.children,item)">
             <Applink v-if="onlyOneChild.meta" :pathtogo="resolvePath(onlyOneChild.path)">
                 <el-menu-item :index="resolvePath(onlyOneChild.path)">
-                    <item :title="onlyOneChild.meta.title" />
+                    <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title"/>
                 </el-menu-item>
             </Applink>
             
         </template>
         <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
         <template slot="title">
-            <item v-if="item.meta" :title="item.meta.title" />
+            <item v-if="item.meta" :title="item.meta.title" :icon="item.meta.icon"/>
         </template>
         <sidebar-item
             v-for="child in item.children"

@@ -1,6 +1,6 @@
 <template>
     <div>
-        hamburger
+     <svg-icon icon-class="Doublearrowleft"/>
     </div>
 </template>
 
