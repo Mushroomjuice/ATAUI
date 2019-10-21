@@ -1,8 +1,11 @@
 <template>
       <div>
             <navbar/>
-            <sidebar/>
-            <app-main/>
+            <el-container>
+                  <sidebar/>
+                  <app-main/>
+            </el-container>
+            
       </div>
 </template>
 

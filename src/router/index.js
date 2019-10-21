@@ -4,10 +4,19 @@ import Layout from '@/layout'
 
 Vue.use(VueRouter)
 
-const routes = [
+const constroutes = [
   {
     path: '/',
     component: Layout,
+    redirect: '/dashboard',
+    children:[
+      {
+        path:'dashboard',
+        component: () => import('@/views/dashboard/index.vue'),
+        name:'dashboard'
+      }
+    ]
+
     
   },
 ]
@@ -15,7 +24,7 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL, 
-  routes
+  routes:constroutes
 })
 
 export default router

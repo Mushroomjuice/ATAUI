@@ -1,7 +1,7 @@
 <template>
-      <div>
-            appmian
-      </div>
+      <el-main>
+            <router-view />
+      </el-main>
 </template>
 
 <script>
