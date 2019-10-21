@@ -3,4 +3,30 @@ body {
     width:100%;
     font-size: 10px;
     font-family:Helvetica,"Segeo UI",Tahoma,Arial,"\5b8b\4f53",sans-serif;
+    height: 750px;
   }
+#app {
+    height: 100%;
+}
+#app > div{
+    height: 100%;
+}
+
+#app >div .el-container {
+    height: 100%;
+}
+#app >div .el-container .el-scrollbar {
+    height: 100%;
+}
+.el-scrollbar__view {
+    height: 100%;
+}
+body .el-menu{
+  background-color:#455875;
+  height: 100%;
+}
+
+// .element::-webkit-scrollbar { width: 0 !important }
+::-webkit-scrollbar {
+  display:none;
+}
