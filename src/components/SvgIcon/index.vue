@@ -35,14 +35,15 @@ export default {
 
 <style lang='scss' scoped>
 .svg-icon {
-  width: 1em;
+  width: 3em;
   height: 1em;
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
+  padding: 0;
 }
 .svg-icon {
-      margin-right: 16px;
+      // margin-right: 16px;
     }
 
 

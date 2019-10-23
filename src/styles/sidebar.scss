@@ -8,7 +8,17 @@
             // width: 200px;
             height: 100%;
             background-color:$menuBg;
-            
+            .el-menu{
+                // width: 250px;
+                .el-menu-item{
+                    text-align: left;
+                    text-indent: 1em;
+                    padding:0 !important;
+                    .el-tooltip {
+                        padding: 0 !important;
+                      }
+                }
+            }    
         }
         
     }
