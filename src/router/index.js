@@ -110,6 +110,11 @@ export const constantRoutes = [
         meta:{title:'uutlist'}
       }
     ]
+  },
+  {
+    path:'/login',
+    component: () => import('@/views/login/index.vue'),
+    meta:{title:'Login',icon:'user'}
   }
 ]
 

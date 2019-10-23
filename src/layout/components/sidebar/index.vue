@@ -1,28 +1,65 @@
 <template>
-      <el-aside>
-            <el-scrollbar>
-                  <el-menu>
-                        <hamburger/>
-                        <SidebarItem v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path"/>
-                  </el-menu>
-            </el-scrollbar>
-      </el-aside>
+      <el-scrollbar>
+            <el-menu
+            mode='vertical'
+            :active-text-color="publicStyleData.activeTextColor"
+            :text-color="publicStyleData.sideTextColor"
+            :background-color="publicStyleData.menuBg"
+            :collapse="isCollapse"
+            
+
+            >
+                  <el-menu-item  @click="collapsemenu">
+                        <svg class="Doublearrowleft"></svg>
+                  </el-menu-item>
+                  <SidebarItem v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path"/>
+            </el-menu>
+      </el-scrollbar>
 </template>
 
 <script>
-import Hamburger from '@/components/Hamburger/'
+import publicStyleData from '@/styles/publicStyleData.scss'
+// import Hamburger from '@/components/Hamburger/'
 import SidebarItem from './SidebarItem'
 import {mapGetters} from 'vuex'
 export default {
       name: 'Sidebar',
       components:{
-            Hamburger,
+            // Hamburger,
             SidebarItem
+      },
+      data() {
+            return {
+                  iscollapse:false
+            }
       },
       computed: {
             ...mapGetters([
                   'permission_routes',
-            ])
+            ]),
+            publicStyleData(){
+                  return publicStyleData
+            },
+            isCollapse(){
+                  return this.iscollapse
+            }
       },
+      methods: {
+            collapsemenu(){
+                  return this.iscollapse = !this.iscollapse
+            }
+      },
+
 }
 </script>
+
+<style lang="scss" scoped>
+.el-scrollbar {
+      height: 100%
+}
+.el-menu {
+      
+      border: 0px;
+      
+}
+</style>

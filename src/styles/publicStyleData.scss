@@ -1,0 +1,11 @@
+$menuBg:#304156;
+$sideTextColor: #f4f4f5;
+$active-text-color:#409EFF;
+
+
+:export {
+    menuBg: $menuBg;
+    activeTextColor:$active-text-color;
+    sideTextColor:$sideTextColor
+
+}
