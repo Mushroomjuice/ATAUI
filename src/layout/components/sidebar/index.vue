@@ -9,8 +9,8 @@
             
 
             >
-                  <el-menu-item  @click="collapsemenu">
-                        <svg class="Doublearrowleft"></svg>
+                  <el-menu-item  @click="collapsemenu" class="doublearrowitem">
+                        <svg-icon :icon-class="isCollapse?'Doublelerrowright':'Doublerrowleft'" class="doublearrow"/>
                   </el-menu-item>
                   <SidebarItem v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path"/>
             </el-menu>
@@ -19,6 +19,7 @@
 
 <script>
 import publicStyleData from '@/styles/publicStyleData.scss'
+// import Item from './Item'
 // import Hamburger from '@/components/Hamburger/'
 import SidebarItem from './SidebarItem'
 import {mapGetters} from 'vuex'
@@ -42,7 +43,8 @@ export default {
             },
             isCollapse(){
                   return this.iscollapse
-            }
+            },
+
       },
       methods: {
             collapsemenu(){
@@ -54,12 +56,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-scrollbar {
-      height: 100%
+.el-menu:not(.el-menu--collapse) {
+      .doublearrowitem  {
+      text-align: center !important;
+      .doublearrow {
+            margin: 0px !important;
+      }
+} 
 }
-.el-menu {
-      
-      border: 0px;
-      
-}
+
+
 </style>

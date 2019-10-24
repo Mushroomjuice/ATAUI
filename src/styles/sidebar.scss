@@ -5,20 +5,98 @@
         height: 100%;
 
         .sidebar-container {
-            
+            // 最小宽度
+            // min-width: $sideBarWidth !important;
             height: 100%;
             background-color:$menuBg;
-            .el-menu{
-                // width: 250px;
-                .el-menu-item{
+
+            //水平折叠动画效果
+            .horizontal-collapse-transition {
+                transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+              }
+            //隐藏水平滚动条
+            .is-horizontal {
+            display: none;
+            }
+
+            a {
+                display: inline-block;
+                width: 100%;
+                overflow: hidden;   
+            }
+            .el-menu {
+                border: none;
+                height: 100%;
+                width: 100% !important;
+                
+            }
+            .el-menu:not(.el-menu--collapse)
+            {
+                min-width: $sideBarWidth !important;
+                .el-menu-item {
+                    min-width: $sideBarWidth !important;
                     text-align: left;
-                    text-indent: 1em;
-                    padding:0 !important;
-                    .el-tooltip {
-                        padding: 0 !important;
-                      }
+                    
                 }
-            }    
+                .el-submenu{
+                    min-width: $sideBarWidth !important;
+                    text-align: left;
+                }
+            }
+            // 没有下拉框的菜单鼠标移入时的标题背景色
+            .submenu-title-noDropdown,
+            .el-submenu__title {
+                &:hover {
+                  background-color: $menuHover !important;
+                }
+            }
+
+            // 有下拉框的菜单属性
+            & .nest-menu .el-submenu>.el-submenu__title,
+            & .el-submenu .el-menu-item {
+            min-width: $sideBarWidth !important;
+            background-color: $subMenuBg !important;
+            
+            &:hover {
+                background-color: $subMenuHover !important;
+            }
+            }
+
+            & .nest-menu a{
+                display: block;
+            }
+
+            // 图标的属性
+            .svg-icon {
+                // 设置和标题文字的距离
+                margin-right: 16px;
+                
+              }
+            
+            //水平折叠后不显示title,只显示icon
+            .el-menu--collapse {
+                .svg-icon {
+                    margin: 0px;
+                    }
+                .el-submenu {
+                    &>.el-submenu__title {
+                    padding: 0 !important;
+                    &>span {
+                        height: 0;
+                        width: 0;
+                        overflow: hidden;
+                        visibility: hidden;
+                        display: inline-block;
+                    }
+                    
+                
+                    .el-submenu__icon-arrow {
+                        display: none;
+                        }
+
+                    }
+                }
+            }
         }
         
     }

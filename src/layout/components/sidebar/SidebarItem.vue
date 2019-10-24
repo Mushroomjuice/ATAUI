@@ -1,27 +1,28 @@
 <template>
     <div v-if="!item.hidden">
-        <!-- 所有的侧边栏功能都是在layout组件下显示，当只有一个功能并且不是隐藏的属性，就吧他显示出来 -->
 
+        <!-- 所有的侧边栏功能都是在layout组件下显示，当只有一个功能并且不是隐藏的属性，就吧他显示出来 -->
+        
         <template v-if="hasoneshowingchildren(item.children,item)">
             <Applink v-if="onlyOneChild.meta" :pathtogo="resolvePath(onlyOneChild.path)">
-                <el-menu-item :index="resolvePath(onlyOneChild.path)"  popper-append-to-body>
+                <el-menu-item :index="resolvePath(onlyOneChild.path)"  popper-append-to-body :class="{'submenu-title-noDropdown':!isNest}">
                     <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title"/>
                 </el-menu-item>
             </Applink>
             
         </template>
-        <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
-        <template slot="title">
-            <item v-if="item.meta" :title="item.meta.title" :icon="item.meta.icon"/>
-        </template>
-        <sidebar-item
-            v-for="child in item.children"
-            :key="child.path"
-            :is-nest="true"
-            :item="child"
-            :base-path="resolvePath(child.path)"
-            class="nest-menu"
-        />
+        <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)">
+            <template slot="title">
+                <item v-if="item.meta" :title="item.meta.title" :icon="item.meta.icon"/>
+            </template>
+            <sidebar-item
+                v-for="child in item.children"
+                :key="child.path"
+                :is-nest="true"
+                :item="child"
+                :base-path="resolvePath(child.path)"
+                class="nest-menu"
+            />
         </el-submenu>
 
         <!-- 项目侧边栏需要嵌套多层折叠功能，，使用递归的原理，将children下面的children组件显示出来 -->

@@ -1,11 +1,22 @@
-$menuBg:#304156;
-$sideTextColor: #f4f4f5;
+
+$sideTextColor: #bfcbd9;
 $active-text-color:#409EFF;
 
+$menuBg:#304156;
+$menuHover:#263445;
 
+// 下级菜单的属性
+$subMenuBg:#1f2d3d;
+$subMenuHover:#001528;
+
+
+$sideBarWidth:210px;
 :export {
     menuBg: $menuBg;
     activeTextColor:$active-text-color;
-    sideTextColor:$sideTextColor
+    sideTextColor:$sideTextColor;
+    menuHover:$menuHover;
+    subMenuHover:$subMenuHover;
+    sideBarWidth:$sideBarWidth;
 
 }

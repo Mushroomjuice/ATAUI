@@ -15,8 +15,8 @@ html {
 *,
 *:before,
 *:after {
-  padding: inherit;
-  margin: inherit;
+  // padding: inherit;
+  // margin: inherit;
   box-sizing: inherit;
 }
 
@@ -41,5 +41,23 @@ body {
 // .element::-webkit-scrollbar { width: 0 !important }
 ::-webkit-scrollbar {
   display:none;
+}
+
+// 设置a标签全局样式
+a:focus,
+a:active {
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+div:focus {
+  outline: none;
 }
 

@@ -30,7 +30,7 @@ export const constantRoutes = [
         path:'dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         name:'dashboard',
-        meta:{ title:'dashboard', icon:'email'}
+        meta:{ title:'dashboard', icon:'home'}
 
       },
       
@@ -59,7 +59,7 @@ export const constantRoutes = [
   {
     path:'/config',
     component:Layout,
-    meta:{title:'Config'},
+    meta:{title:'Config', icon:'setting'},
     children:[
       {
         path:'suitconfig',
@@ -114,7 +114,7 @@ export const constantRoutes = [
   {
     path:'/login',
     component: () => import('@/views/login/index.vue'),
-    meta:{title:'Login',icon:'user'}
+    hidden:true,
   }
 ]
 
