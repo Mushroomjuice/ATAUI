@@ -10,7 +10,7 @@
 
             >
                   <el-menu-item  @click="collapsemenu" class="doublearrowitem">
-                        <svg-icon :icon-class="isCollapse?'Doublelerrowright':'Doublerrowleft'" class="doublearrow"/>
+                        <svg-icon :icon-class="isCollapse?'Doublearrowright':'Doublearrowleft'" class="doublearrow"/>
                   </el-menu-item>
                   <SidebarItem v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path"/>
             </el-menu>
