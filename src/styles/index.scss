@@ -1,4 +1,4 @@
-@import './publicStyleData.scss'; //第一个导入
+@import './publicStyleData.scss'; //第一个导入，不然里边的变量下面获取不了
 @import './sidebar.scss';
 @import './navbar.scss';
 
