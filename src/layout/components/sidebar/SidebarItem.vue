@@ -4,7 +4,7 @@
 
         <template v-if="hasoneshowingchildren(item.children,item)">
             <Applink v-if="onlyOneChild.meta" :pathtogo="resolvePath(onlyOneChild.path)">
-                <el-menu-item :index="resolvePath(onlyOneChild.path)" popper-append-to-body>
+                <el-menu-item :index="resolvePath(onlyOneChild.path)"  popper-append-to-body>
                     <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title"/>
                 </el-menu-item>
             </Applink>
