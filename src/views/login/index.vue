@@ -31,12 +31,7 @@
 
         </el-form-item>
 
-
-
-
-
-
-
+        <el-button type="primary" @click="handlelogin">login</el-button>
     </el-form>
 </template>
 
@@ -49,6 +44,11 @@ export default {
                 username:'',
                 password:'',
             }
+        }
+    },
+    methods:{
+        handlelogin(){
+            // this.$store.dispatch('user/login',this.loginform)
         }
     }
 }
