@@ -6,6 +6,7 @@
             :text-color="publicStyleData.sideTextColor"
             :background-color="publicStyleData.menuBg"
             :collapse="isCollapse"
+            :collapse-transition="true"
             
 
             >

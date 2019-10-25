@@ -48,7 +48,7 @@ export const constantRoutes = [
         path:'version',
         component: () => import('@/views/version/index.vue'),
         name:'version',
-        meta:{title:'version',icon:'email'}
+        meta:{title:'version',icon:'version'}
 
       },
       
