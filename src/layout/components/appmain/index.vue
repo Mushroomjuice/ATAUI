@@ -1,7 +1,6 @@
 <template>
       <el-main>
             <el-header>
-
             </el-header>
             <router-view/>
       </el-main>

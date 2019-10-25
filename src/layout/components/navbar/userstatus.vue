@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <div>
         <el-col :span="2">
             
                 <template>
@@ -13,16 +13,16 @@
             
         </el-col>
         <el-col :span="2">
-            <router-link to="/login/"
-            >
+            <router-link to="/login/">
                 <svg-icon icon-class='login' class="loginicon"></svg-icon>
                 <span>login</span>
             </router-link>
            
             
         </el-col>
-    </el-row>
+    </div>
         
+    
         
     
 </template>

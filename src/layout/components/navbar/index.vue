@@ -6,7 +6,8 @@
                  <el-col :span="4">
                         <router-link to="/uutlist/">
                               <img src="@/assets/logo.png" class="logo">
-                        </router-link>     
+                              
+                        </router-link>
                  </el-col>
                  <UserStatus/>
 
@@ -26,8 +27,8 @@ export default {
 
 <style lang="scss" scoped>
 // .app-header {
-//       // line-height: 0px !important;
-//       }
+//       line-height: 0px !important;
+//       }        `     
 .el-col {
       height: 60px;
       text-align: center;
