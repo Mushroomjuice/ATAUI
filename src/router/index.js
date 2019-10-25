@@ -33,6 +33,12 @@ export const constantRoutes = [
         meta:{ title:'dashboard', icon:'home'}
 
       },
+      {
+        path:'uutlist',
+        component:() => import('@/views/uutlist/index.vue'),
+        name:'uutlist',
+        hidden:true
+      }
       
 
     ]
@@ -103,19 +109,15 @@ export const constantRoutes = [
         name:'monitorconfig',
         meta:{title:'monitorconfig'}
       },
-      {
-        path:'uutlist',
-        component: () => import('@/views/uutlist/index.vue'),
-        name: 'uutlist',
-        meta:{title:'uutlist'}
-      }
+      
     ]
   },
   {
     path:'/login',
     component: () => import('@/views/login/index.vue'),
     hidden:true,
-  }
+  },
+  
 ]
 
 
