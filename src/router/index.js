@@ -19,7 +19,7 @@ meta: {
 
 
 
-
+//所有不需要权限就能加载的路由
 export const constantRoutes = [
   {
     path: '/',
@@ -66,51 +66,51 @@ export const constantRoutes = [
     path:'/config',
     component:Layout,
     meta:{title:'Config', icon:'setting'},
-    children:[
-      {
-        path:'suitconfig',
-        component: () => import('@/views/suitconfig/index.vue'),
-        name:'suitconfig',
-        meta:{title:'suitconfig'}
-      },
-      {
-        path:'atasetting',
-        component: () => import('@/views/atasetting/index.vue'),
-        name:'atasetting',
-        meta:{title:'atasetting'}
-      },
-      {
-        path:'firmwareconfig',
-        component: () => import('@/views/firmwareconfig/index.vue'),
-        name:'firmwareconfig',
-        meta:{title:'firmwareconfig'}
-      },
-      {
-        path:'customerconfig',
-        component: () => import('@/views/customerconfig/index.vue'),
-        name:'customerconfig',
-        meta:{title:'customerconfig'}
-      },
-      {
-        path:'fixtureconfig',
-        component: () => import('@/views/fixtureconfig/index.vue'),
-        name:'fixtureconfig',
-        meta:{title:'fixtureconfig'}
-      },
-      {
-        path:'hardwareconfig',
-        component: () => import('@/views/hardwareconfig/index.vue'),
-        name:'hardwareconfig',
-        meta:{title:'hardwareconfig'}
-      },
-      {
-        path:'monitorconfig',
-        component: () => import('@/views/monitorconfig/index.vue'),
-        name:'monitorconfig',
-        meta:{title:'monitorconfig'}
-      },
+    // children:[
+    //   {
+    //     path:'suitconfig',
+    //     component: () => import('@/views/suitconfig/index.vue'),
+    //     name:'suitconfig',
+    //     meta:{title:'suitconfig'}
+    //   },
+    //   {
+    //     path:'atasetting',
+    //     component: () => import('@/views/atasetting/index.vue'),
+    //     name:'atasetting',
+    //     meta:{title:'atasetting'}
+    //   },
+    //   {
+    //     path:'firmwareconfig',
+    //     component: () => import('@/views/firmwareconfig/index.vue'),
+    //     name:'firmwareconfig',
+    //     meta:{title:'firmwareconfig'}
+    //   },
+    //   {
+    //     path:'customerconfig',
+    //     component: () => import('@/views/customerconfig/index.vue'),
+    //     name:'customerconfig',
+    //     meta:{title:'customerconfig'}
+    //   },
+    //   {
+    //     path:'fixtureconfig',
+    //     component: () => import('@/views/fixtureconfig/index.vue'),
+    //     name:'fixtureconfig',
+    //     meta:{title:'fixtureconfig'}
+    //   },
+    //   {
+    //     path:'hardwareconfig',
+    //     component: () => import('@/views/hardwareconfig/index.vue'),
+    //     name:'hardwareconfig',
+    //     meta:{title:'hardwareconfig'}
+    //   },
+    //   {
+    //     path:'monitorconfig',
+    //     component: () => import('@/views/monitorconfig/index.vue'),
+    //     name:'monitorconfig',
+    //     meta:{title:'monitorconfig'}
+    //   },
       
-    ]
+    // ]
   },
   {
     path:'/login',
@@ -118,6 +118,11 @@ export const constantRoutes = [
     hidden:true,
   },
   
+]
+
+// 所有可能需要权限才能加载的路由
+export const asyncRoutes = [
+
 ]
 
 

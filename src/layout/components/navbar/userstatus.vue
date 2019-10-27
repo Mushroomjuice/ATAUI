@@ -5,7 +5,7 @@
                 <template>
                     <div class="user">
                         <svg-icon icon-class='user' class="usericon"></svg-icon>
-                        <span>username</span>
+                        <span>{{username}}</span>
                     </div>
                 </template>
                 
@@ -28,8 +28,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-    name:'UserStatus'
+    name:'UserStatus',
+
+    computed: {
+        ...mapGetters([
+            'username',
+            'userroles',
+        ])
+    },
 
     //去vuex中获取用户的状态
 }

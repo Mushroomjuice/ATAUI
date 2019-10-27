@@ -1,6 +1,6 @@
 import  {constantRoutes}  from '@/router/index.js'
 
-const asyncRoutes = []
+
 function hasPermission(roles, route) {
     if (route.meta && route.meta.roles) {
       return roles.some(role => route.meta.roles.includes(role))
@@ -33,7 +33,7 @@ function hasPermission(roles, route) {
 
 
 const state = {
-    routes: constantRoutes,
+    routes: [],
     addRoutes: []
   }
 
@@ -47,13 +47,19 @@ SET_ROUTES: (state, routes) => {
 
 
 const actions = {
+    // roles   {config:['atasetting','suitconfig']}
     generateRoutes({ commit }, roles) {
       return new Promise(resolve => {
-        let accessedRoutes
-        if (roles.includes('admin')) {
-          accessedRoutes = asyncRoutes || []
-        } else {
-          accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        let accessedRoutes=[]
+        // 将roles中提供的路由和asyncRoutes中的路由匹配
+        // if (roles.includes('admin')) {
+        //   accessedRoutes = asyncRoutes || []
+        // } else {
+        //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        // }
+        if (roles) {
+          console.log('匹配路由')
+          // console.log(accessedRoutes)
         }
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)

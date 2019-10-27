@@ -31,11 +31,12 @@
 
         </el-form-item>
 
-        <el-button type="primary" @click="handlelogin">login</el-button>
+        <el-button type="primary" @click="handlelogin()">login</el-button>
     </el-form>
 </template>
 
 <script>
+
 export default {
     name:'Login',
     data(){
@@ -46,9 +47,15 @@ export default {
             }
         }
     },
+    
     methods:{
         handlelogin(){
-            // this.$store.dispatch('user/login',this.loginform)
+            this.$store.dispatch('user/login',this.loginform).then(() => {
+                // this.$store.dispatch('user/getInfo') //页面最开始加载以后就要去获取info 后期放到全局去
+                // this.$store.dispatch('asyncRoutes/generateRoutes',1)
+                this.$router.push({path:'/'})
+                
+            })
         }
     }
 }
