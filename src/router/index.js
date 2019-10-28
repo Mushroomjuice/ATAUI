@@ -74,7 +74,7 @@ export const constantRoutes = [
 // 所有可能需要权限才能加载的路由
 export const asyncRoutes = [
   {
-    path:'/config/suitconfig',
+    path:'/config',
     component:Layout,
     meta:{title:'Config', icon:'setting'},
     children:[

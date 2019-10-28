@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 
+
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 
@@ -17,14 +18,16 @@ router.beforeEach(async(to,from,next) => {
                   next({path:'/dashboard'})
                   NProgress.done()
             }else{
-                  const hasRoles = store.getters.userroles
-                  if(hasRoles){
+                  const hasRoles = store.getters.roles
+                  if(hasRoles.lenght>1){
                         next()
-                  } else{
+                  } else {
                         try{
                               // 获取user info
                               const { roles } = await store.dispatch('user/getInfo')
+                              
                               const accessRoutes = await store.dispatch('asyncRoutes/generateRoutes', roles)
+                              
                               router.addRoutes(accessRoutes)
                               next({path:'/'})
                               NProgress.done()

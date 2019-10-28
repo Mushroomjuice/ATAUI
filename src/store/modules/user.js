@@ -7,7 +7,7 @@ import {login,getInfo} from '@/api/user'
 const state = {
       token: getToken(),
       name:'',
-      roles:null,
+      roles:[],
 }
 
 
@@ -43,8 +43,8 @@ const actions = {
             return new Promise((resolve,reject) => {
                   getInfo(state.token).then(response => {
                         const {data} = response
-                        
                         const { roles, name } = data
+                        
                         commit('SET_NAME',name)
                         commit('SET_ROLES',roles)
                         resolve(data)
