@@ -1,9 +1,22 @@
 import  {constantRoutes}  from '@/router/index.js'
 
-
+//  将后端传过来的路由表和定义的路由表想匹配
 function hasPermission(roles, route) {
-    if (route.meta && route.meta.roles) {
-      return roles.some(role => route.meta.roles.includes(role))
+  // 
+    if (route.path) {
+      function(roles){
+        
+      }
+
+
+      
+      roles.forEach(role => {
+        const PMrole = {...role}
+        if (PMrole.path){
+          console.log()
+        }
+      })
+      return roleskeywords.some(role => route.path.includes(role))
     } else {
       return true
     }
@@ -19,6 +32,10 @@ function hasPermission(roles, route) {
   
     routes.forEach(route => {
       const tmp = { ...route }
+      // console.log('转化前',roles)
+      
+      // const rolesobject = JSON.parse(roles)
+      // console.log(rolesobject)
       if (hasPermission(roles, tmp)) {
         if (tmp.children) {
           tmp.children = filterAsyncRoutes(tmp.children, roles)
@@ -58,7 +75,7 @@ const actions = {
         //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
         // }
         if (roles) {
-          console.log('匹配路由')
+          console.log(roles)
           // console.log(accessedRoutes)
         }
         commit('SET_ROUTES', accessedRoutes)

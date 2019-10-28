@@ -19,7 +19,7 @@ router.beforeEach(async(to,from,next) => {
             }else{
                   const hasRoles = store.getters.userroles
                   if(hasRoles){
-                        next({path:'/dashboard'})
+                        next()
                   } else{
                         try{
                               // 获取user info
@@ -35,8 +35,10 @@ router.beforeEach(async(to,from,next) => {
                   }
             }
       } else {
+            //如果没有登录，则跳转到首页，显示默认路由
             console.log('not login')
-            next({path:'/'})
+            next()
+            NProgress.done()
       }
 })
 
