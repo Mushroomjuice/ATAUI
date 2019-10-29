@@ -3,11 +3,9 @@ import  {constantRoutes, asyncRoutes}  from '@/router/index.js'
 //  将后端传过来的路由表和定义的路由表想匹配
 function hasPermission(route, roles) {
   if (route.path) {
-    console.log(roles)
-    console.log(route.path.substr(1))
+    //将path中的'/'去掉
     const routepath = route.path.substr(1)
-    const allowornot = roles.include(routepath)
-    console.log(allowornot)
+    const allowornot = roles.includes(routepath)
     return allowornot
   } else {
     return true
@@ -23,17 +21,14 @@ function hasPermission(route, roles) {
   
     routes.forEach(route => {
       const tmp = { ...route }
-      // console.log('转化前',roles)
-      // console.log(route)
-      // const rolesobject = JSON.parse(roles)
-      // console.log(rolesobject)
+      
       if (hasPermission(tmp, roles)) {
         
         if (tmp.children) {
           tmp.children = filterAsyncRoutes(tmp.children, roles)
         }
         res.push(tmp)
-        // console.log(res)
+        
       }
     })
     

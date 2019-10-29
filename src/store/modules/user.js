@@ -30,9 +30,10 @@ const actions = {
 
             return new Promise((resolve,reject) => {
                   login({username:username, password:password}).then(response => {
+                        // 解构赋值
                         const {data} = response
                         commit('SET_TOKEN',data.token)
-                        ssetToken(data.token)
+                        setToken(data.token)
                         resolve()
                   }).catch(error => {
                         reject(error)
