@@ -2,30 +2,11 @@ import  {constantRoutes, asyncRoutes}  from '@/router/index.js'
 
 //  将后端传过来的路由表和定义的路由表想匹配
 function hasPermission(route, roles) {
-  // 
-  //   if (route.path) {
-  //     // function(roles){
-        
-  //     // }
-
-
-      
-  //   //   roles.forEach(role => {
-  //   //     const PMrole = {...role}
-  //   //     if (PMrole.path){
-  //   //       console.log()
-  //   //     }
-  //   //   })
-  //   //   return roleskeywords.some(role => route.path.includes(role))
-  //   // } else {
-  //   //   return true
-  //   // }
-  // }
-  
   if (route.path) {
     console.log(roles)
     console.log(route.path.substr(1))
-    const allowornot = roles.include(route.path.substr(1))
+    const routepath = route.path.substr(1)
+    const allowornot = roles.include(routepath)
     console.log(allowornot)
     return allowornot
   } else {

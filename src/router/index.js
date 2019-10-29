@@ -77,52 +77,52 @@ export const asyncRoutes = [
     path:'/config',
     component:Layout,
     meta:{title:'Config', icon:'setting'},
-    children:[
-      {
-        path:'suitconfig',
-        component: () => import('@/views/suitconfig/index.vue'),
-        name:'suitconfig',
-        meta:{title:'suitconfig'}
+    // children:[
+    //   {
+    //     path:'suitconfig',
+    //     component: () => import('@/views/suitconfig/index.vue'),
+    //     name:'suitconfig',
+    //     meta:{title:'suitconfig'}
         
-      },
-      {
-        path:'atasetting',
-        component: () => import('@/views/atasetting/index.vue'),
-        name:'atasetting',
-        meta:{title:'atasetting'}
-      },
-      {
-        path:'firmwareconfig',
-        component: () => import('@/views/firmwareconfig/index.vue'),
-        name:'firmwareconfig',
-        meta:{title:'firmwareconfig'}
-      },
-      {
-        path:'customerconfig',
-        component: () => import('@/views/customerconfig/index.vue'),
-        name:'customerconfig',
-        meta:{title:'customerconfig'}
-      },
-      {
-        path:'fixtureconfig',
-        component: () => import('@/views/fixtureconfig/index.vue'),
-        name:'fixtureconfig',
-        meta:{title:'fixtureconfig'}
-      },
-      {
-        path:'hardwareconfig',
-        component: () => import('@/views/hardwareconfig/index.vue'),
-        name:'hardwareconfig',
-        meta:{title:'hardwareconfig'}
-      },
-      {
-        path:'monitorconfig',
-        component: () => import('@/views/monitorconfig/index.vue'),
-        name:'monitorconfig',
-        meta:{title:'monitorconfig'}
-      },
+    //   },
+    //   {
+    //     path:'atasetting',
+    //     component: () => import('@/views/atasetting/index.vue'),
+    //     name:'atasetting',
+    //     meta:{title:'atasetting'}
+    //   },
+    //   {
+    //     path:'firmwareconfig',
+    //     component: () => import('@/views/firmwareconfig/index.vue'),
+    //     name:'firmwareconfig',
+    //     meta:{title:'firmwareconfig'}
+    //   },
+    //   {
+    //     path:'customerconfig',
+    //     component: () => import('@/views/customerconfig/index.vue'),
+    //     name:'customerconfig',
+    //     meta:{title:'customerconfig'}
+    //   },
+    //   {
+    //     path:'fixtureconfig',
+    //     component: () => import('@/views/fixtureconfig/index.vue'),
+    //     name:'fixtureconfig',
+    //     meta:{title:'fixtureconfig'}
+    //   },
+    //   {
+    //     path:'hardwareconfig',
+    //     component: () => import('@/views/hardwareconfig/index.vue'),
+    //     name:'hardwareconfig',
+    //     meta:{title:'hardwareconfig'}
+    //   },
+    //   {
+    //     path:'monitorconfig',
+    //     component: () => import('@/views/monitorconfig/index.vue'),
+    //     name:'monitorconfig',
+    //     meta:{title:'monitorconfig'}
+    //   },
       
-    ]
+    // ]
   },
 ]
 

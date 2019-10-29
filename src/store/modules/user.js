@@ -32,7 +32,7 @@ const actions = {
                   login({username:username, password:password}).then(response => {
                         const {data} = response
                         commit('SET_TOKEN',data.token)
-                        setToken(data.token)
+                        ssetToken(data.token)
                         resolve()
                   }).catch(error => {
                         reject(error)
