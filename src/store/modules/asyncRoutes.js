@@ -4,8 +4,11 @@ import  {constantRoutes, asyncRoutes}  from '@/router/index.js'
 function hasPermission(route, roles) {
   if (route.path) {
     //将path中的'/'去掉
-    const routepath = route.path.substr(1)
-    const allowornot = roles.includes(routepath)
+    // const routepath = route.path.substr(1)
+    //判断该路由在不在可访问路由里面 startsWith()可能有浏览器兼容性问题
+    const generalpath = route.path.startsWith('/') ? route.path.substr(1) : route.path
+    const allowornot = roles.includes(generalpath)
+    // console.log(allowornot)
     return allowornot
   } else {
     return true
@@ -38,7 +41,7 @@ function hasPermission(route, roles) {
 
 
 const state = {
-    routes: [],
+    routes: constantRoutes,
     addRoutes: []
   }
 
@@ -59,6 +62,7 @@ const actions = {
         // 将roles中提供的路由和asyncRoutes中的路由匹配
         
         accessedRoutes = filterAsyncRoutes(asyncRoutes,roles)
+        console.log(accessedRoutes)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       })

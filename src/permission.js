@@ -18,19 +18,20 @@ router.beforeEach(async(to,from,next) => {
                   next({path:'/dashboard'})
                   NProgress.done()
             }else{
-                  const hasRoles = store.getters.roles
-                  if(hasRoles.lenght>0){
-
+                  const hasRoles = store.getters.roles && store.getters.roles.length > 0
+                  if(hasRoles){
+                        
                         next()
                   } else {
                         try{
                               // 获取user info
+                              
                               const { roles } = await store.dispatch('user/getInfo')
                               
                               const accessRoutes = await store.dispatch('asyncRoutes/generateRoutes', roles)
-                              console.log('11111', accessRoutes)
+                              // console.log('11111', accessRoutes)
                               router.addRoutes(accessRoutes)
-                              next({path:'/'})
+                              next({ ...to, replace: true })
                               NProgress.done()
                         } catch (error) {
                               // Message.error(error || 'Has Error')
@@ -40,7 +41,7 @@ router.beforeEach(async(to,from,next) => {
             }
       } else {
             //如果没有登录，则跳转到首页，显示默认路由
-            console.log('not login')
+            // console.log('not login')
             next()
             NProgress.done()
       }
