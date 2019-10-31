@@ -24,13 +24,13 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/Home',
     children:[
       {
-        path:'dashboard',
-        component: () => import('@/views/dashboard/index.vue'),
-        name:'dashboard',
-        meta:{ title:'dashboard', icon:'home'}
+        path:'Home',
+        component: () => import('@/views/home/index.vue'),
+        name:'Home',
+        meta:{ title:'Home', icon:'home'}
 
       },
       {
@@ -38,23 +38,24 @@ export const constantRoutes = [
         component:() => import('@/views/uutlist/index.vue'),
         name:'uutlist',
         hidden:true
-      }
+      },
+
       
 
     ]
 
     
   },
+  
   {
     path: '/version',
     component: Layout,
-    redirect: 'version',
     children:[
       {
-        path:'version',
+        path:'',
         component: () => import('@/views/version/index.vue'),
         name:'version',
-        meta:{title:'version',icon:'version'}
+        meta:{title:'ATA Version',icon:'version'}
 
       },
       
@@ -80,50 +81,81 @@ export const asyncRoutes = [
     children:[
       {
         path:'suitconfig',
-        component: () => import('@/views/suitconfig/index.vue'),
+        component: () => import('@/views/config/suitconfig/index.vue'),
         name:'suitconfig',
-        meta:{title:'suitconfig'}
+        meta:{title:'Suit Config'}
         
       },
       {
         path:'atasetting',
-        component: () => import('@/views/atasetting/index.vue'),
+        component: () => import('@/views/config/atasetting/index.vue'),
         name:'atasetting',
-        meta:{title:'atasetting'}
+        meta:{title:'ATA Setting'}
       },
       {
         path:'firmwareconfig',
-        component: () => import('@/views/firmwareconfig/index.vue'),
+        component: () => import('@/views/config/firmwareconfig/index.vue'),
         name:'firmwareconfig',
-        meta:{title:'firmwareconfig'}
+        meta:{title:'Firmware Config'}
       },
       {
         path:'customerconfig',
-        component: () => import('@/views/customerconfig/index.vue'),
+        component: () => import('@/views/config/customerconfig/index.vue'),
         name:'customerconfig',
-        meta:{title:'customerconfig'}
+        meta:{title:'Customer Config'}
       },
       {
         path:'fixtureconfig',
-        component: () => import('@/views/fixtureconfig/index.vue'),
+        component: () => import('@/views/config/fixtureconfig/index.vue'),
         name:'fixtureconfig',
-        meta:{title:'fixtureconfig'}
+        meta:{title:'Fixture Config'}
       },
       {
         path:'hardwareconfig',
-        component: () => import('@/views/hardwareconfig/index.vue'),
+        component: () => import('@/views/config/hardwareconfig/index.vue'),
         name:'hardwareconfig',
-        meta:{title:'hardwareconfig'}
+        meta:{title:'Hardware Config'}
       },
       {
         path:'monitorconfig',
-        component: () => import('@/views/monitorconfig/index.vue'),
+        component: () => import('@/views/config/monitorconfig/index.vue'),
         name:'monitorconfig',
-        meta:{title:'monitorconfig'}
+        meta:{title:'Monitor Config'}
       },
+      {
+        path:'uutbootupconfig',
+        component:() => import('@/views/config/uutbootupconfig/index.vue'),
+        name:'uutbootupconfig',
+        meta:{title:'UUT BootUP Config'}
+      },
+      {
+        path:'location',
+        component: ()=> import('@/views/config/location/index.vue'),
+        name:'location',
+        meta:{title:'Location'}
+      },
+      {
+        path:'memoryslot',
+        component: ()=> import('@/views/config/memoryslot/index.vue'),
+        name:'memoryslot',
+        meta:{title:'Memory Slot'}
+      }
+
       
     ]
   },
+  {
+    path:'/query',
+    component: Layout,
+    meta:{title:'Query',icon:'query'},
+    children:[]
+  },
+  {
+    path:'/utilities',
+    component:Layout,
+    name:'utilities',
+    meta:{title:'Utilities',icon:'spanner'}
+  }
 ]
 
 
@@ -132,6 +164,15 @@ const router = new VueRouter({
   base: process.env.BASE_URL, 
   routes:constantRoutes
 })
+
+export function resetRouter() {
+  const newRouter = new VueRouter({
+    mode: 'history',
+    base: process.env.BASE_URL, 
+    routes:constantRoutes
+  })
+  router.matcher = newRouter.matcher // reset router
+}
 
 export default router
 

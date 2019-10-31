@@ -1,5 +1,8 @@
-import {getToken ,setToken} from '@/utils/auth'
-import {login,getInfo} from '@/api/user'
+import {getToken ,setToken,removeToken,} from '@/utils/auth'
+import {login,getInfo,loginout} from '@/api/user'
+import store from '@/store'
+import router,  { resetRouter } from '@/router'
+
 
 
 
@@ -40,6 +43,32 @@ const actions = {
                   })
             })
       },
+      loginout( { commit, state } ){
+            return new Promise((resolve, reject) => {
+                  loginout(state.token).then(() => {
+                        commit('SET_TOKEN', '')
+                        commit('SET_ROLES', [])
+                        commit("SET_NAME",'')
+                        
+                        removeToken()
+                        resetRouter()
+                        // async() => {
+                        // //       const  roles  = await store.getters.roles
+                              
+                             
+                        // }
+                        console.log(store.getters.roles)
+                        const accessRoutes = store.dispatch('asyncRoutes/generateRoutes', store.getters.roles)
+                        // console.log('11111', accessRoutes)
+                        router.addRoutes(accessRoutes)
+                        
+                        resolve()
+                  }).catch(error => {
+                        reject(error)
+                  })
+            })
+
+      },
       getInfo({ commit, state}){
             return new Promise((resolve,reject) => {
                   getInfo(state.token).then(response => {
@@ -54,7 +83,8 @@ const actions = {
                   })
             }
             )
-      }
+      },
+
 }
 
 export default {

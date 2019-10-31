@@ -13,10 +13,15 @@
             
         </el-col>
         <el-col :span="2">
-            <router-link to="/login/">
-                <svg-icon icon-class='login' class="loginicon"></svg-icon>
-                <span>login</span>
+            <router-link to="/login" v-if="!token">
+                <svg-icon icon-class='loginin' class="loginicon"></svg-icon>
+                <span>login in</span>
             </router-link>
+            <div v-else @click="loginout"> 
+                <svg-icon icon-class='loginout' class="loginicon"></svg-icon>
+                <span>login out</span>
+            </div>
+
            
             
         </el-col>
@@ -35,8 +40,14 @@ export default {
     computed: {
         ...mapGetters([
             'username',
-            'userroles',
+            'token',
         ])
+    },
+    methods: {
+        async loginout(){
+            await this.$store.dispatch('user/loginout')
+            // this.$router.push('/')
+        }
     },
 
     //去vuex中获取用户的状态
