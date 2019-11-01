@@ -1,14 +1,19 @@
 <template>
       <el-main>
-            <el-header>
-            </el-header>
+            <Title title="192.168.128.32"></Title>
+            <hr style="color:#6c6c6c;margin-bottom:0px;margin-top:0px;">
             <router-view/>
       </el-main>
 </template>
 
 <script>
+import Title from './Title'
 export default {
-      name:'AppMain'
+
+      name:'AppMain',
+      components:{
+            Title,
+      }
 }
 </script>
 

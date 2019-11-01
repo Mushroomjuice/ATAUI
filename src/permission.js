@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 
 
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
+NProgress.configure({ showSpinner: true }) // NProgress Configuration
 
 
 
@@ -40,19 +40,6 @@ router.beforeEach(async(to,from,next) => {
                   }
             }
       } else {
-            //退出登录
-            // const hasroles = store.getters.roles && store.getters.roles.length >0
-            // if(hasroles){
-            //       try {
-            //             const {roles} = store.getters.roles
-            //             store.dispatch('asyncRoutes/generateRoutes', roles)
-            //             const accessRoutes = router.addRoutes(accessRoutes)
-            //             console.log(accessRoutes)
-            //             next({ path:'/' })
-            //       } catch(error) {
-            //             NProgress.done()
-            //       }
-            // } else{
                   next()
             NProgress.done()
             // }
