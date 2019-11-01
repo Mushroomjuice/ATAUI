@@ -20,14 +20,14 @@ router.beforeEach(async(to,from,next) => {
             }else{
                   const hasRoles = store.getters.roles && store.getters.roles.length > 0
                   if(hasRoles){
-                        
+                        console.log('获取roles之后')
                         next()
                   } else {
                         try{
                               // 获取user info
-                              
+                              console.log('正在获取roles')
                               const { roles } = await store.dispatch('user/getInfo')
-                              
+                              console.log('已经获取roles')
                               const accessRoutes = await store.dispatch('asyncRoutes/generateRoutes', roles)
                               // console.log('11111', accessRoutes)
                               router.addRoutes(accessRoutes)
@@ -40,10 +40,23 @@ router.beforeEach(async(to,from,next) => {
                   }
             }
       } else {
-            //如果没有登录，则跳转到首页，显示默认路由
-            // console.log('not login')
-            next()
+            //退出登录
+            // const hasroles = store.getters.roles && store.getters.roles.length >0
+            // if(hasroles){
+            //       try {
+            //             const {roles} = store.getters.roles
+            //             store.dispatch('asyncRoutes/generateRoutes', roles)
+            //             const accessRoutes = router.addRoutes(accessRoutes)
+            //             console.log(accessRoutes)
+            //             next({ path:'/' })
+            //       } catch(error) {
+            //             NProgress.done()
+            //       }
+            // } else{
+                  next()
             NProgress.done()
+            // }
+            
       }
 })
 

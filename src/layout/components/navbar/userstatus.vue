@@ -14,13 +14,16 @@
         </el-col>
         <el-col :span="2">
             <router-link to="/login" v-if="!token">
-                <svg-icon icon-class='loginin' class="loginicon"></svg-icon>
-                <span>login in</span>
+            <el-button style="text">
+                <svg-icon icon-class='login' class="loginicon"></svg-icon>
+                <span>login</span>
+            </el-button>
             </router-link>
-            <div v-else @click="loginout"> 
-                <svg-icon icon-class='loginout' class="loginicon"></svg-icon>
-                <span>login out</span>
-            </div>
+            <el-button v-else @click="logout">
+                <svg-icon icon-class='logout' class="loginicon"></svg-icon>
+                <span>logout</span>
+            </el-button>
+           
 
            
             
@@ -34,6 +37,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { resetRouter } from '@/router'
+// import store from '@/store'
+// import router from '@/router'
 export default {
     name:'UserStatus',
 
@@ -44,9 +50,16 @@ export default {
         ])
     },
     methods: {
-        async loginout(){
-            await this.$store.dispatch('user/loginout')
-            // this.$router.push('/')
+        async logout(){
+            await this.$store.dispatch('user/logout')
+            // const { roles } = await this.$store.dispatch('user/getInfo')
+            // const roles  = this.$store.getters.roles                  
+            await this.$store.dispatch('asyncRoutes/generateRoutes', [])
+            // console.log(roles)
+            resetRouter()
+        
+            // this.$router.addRoutes(accessRoutes)
+            this.$router.push({path:'/home'})
         }
     },
 

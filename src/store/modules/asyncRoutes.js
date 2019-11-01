@@ -62,7 +62,7 @@ const actions = {
         // 将roles中提供的路由和asyncRoutes中的路由匹配
         
         accessedRoutes = filterAsyncRoutes(asyncRoutes,roles)
-        console.log(accessedRoutes)
+        // console.log(accessedRoutes)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       })

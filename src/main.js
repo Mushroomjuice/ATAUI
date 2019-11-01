@@ -8,7 +8,7 @@ import '@/styles/index.scss' // global css
 import '@/icons'
 import '@/permission'
 // import "font-awesome/css/font-awesome.min.css"
-Vue.config.productionTip = false
+Vue.config.productionTip = true
 Vue.use(ElementUI);
 new Vue({
   router,
