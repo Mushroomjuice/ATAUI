@@ -52,7 +52,8 @@ export default {
         handlelogin(){
             this.$store.dispatch('user/login',this.loginform)
             .then(() => {
-            this.$router.push({path:'/'})
+                this.$router.push({path:'/',query:'d'})
+            
                 
             })
             .catch(error => {

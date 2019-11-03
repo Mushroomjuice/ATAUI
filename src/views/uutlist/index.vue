@@ -50,6 +50,8 @@ export default {
                 this.uut.list = response.data.uutlist
                 console.log(response)
                 this.listloading = false
+            }).catch(error => {
+                console.log(error)
             })
         }
     },

@@ -59,8 +59,9 @@ const actions = {
             })
 
       },
-      getInfo({ commit, state}){
+      getInfo({ commit, state }){
             return new Promise((resolve,reject) => {
+                  
                   getInfo(state.token).then(response => {
                         const {data} = response
                         const { roles, name } = data
@@ -69,6 +70,7 @@ const actions = {
                         commit('SET_ROLES',roles)
                         resolve(data)
                   }).catch(error => {
+                        
                         reject(error)
                   })
             }

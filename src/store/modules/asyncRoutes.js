@@ -1,5 +1,7 @@
 import  {constantRoutes, asyncRoutes}  from '@/router/index.js'
 
+
+
 //  将后端传过来的路由表和定义的路由表想匹配
 function hasPermission(route, roles) {
   if (route.path) {
@@ -61,10 +63,13 @@ const actions = {
         let accessedRoutes = null
         // 将roles中提供的路由和asyncRoutes中的路由匹配
         
-        accessedRoutes = filterAsyncRoutes(asyncRoutes,roles)
+        try { accessedRoutes = filterAsyncRoutes(asyncRoutes,roles)} catch(error) {
+          console.log(error)
+        }
         // console.log(accessedRoutes)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
+        
       })
     }
   }

@@ -1,6 +1,6 @@
 import router from './router'
 import store from './store'
-// import { Message } from 'element-ui'
+import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
@@ -25,22 +25,24 @@ router.beforeEach(async(to,from,next) => {
                   } else {
                         try{
                               // 获取user info
-                              console.log('正在获取roles')
+                              
                               const { roles } = await store.dispatch('user/getInfo')
-                              console.log('已经获取roles')
+                              
                               const accessRoutes = await store.dispatch('asyncRoutes/generateRoutes', roles)
-                              console.log('11111', accessRoutes)
+                              
                               router.addRoutes(accessRoutes)
-                              next({ ...to, replace: true })
+                              
+                              next({ to, replace: true })   //不让返回到登录界面 后期如果要添加跳转带参数的路由可以用 ...to (扩展运算符)
                               NProgress.done()
                         } catch (error) {
-                              // Message.error(error || 'Has Error')
+                              Message.error(error || 'Has Error')
+                             
                               NProgress.done()
                         }
                   }
             }
       } else {
-                  next()
+            next()
             NProgress.done()
             // }
             

@@ -167,7 +167,7 @@ const router = new VueRouter({
 
 export function resetRouter() {
   const newRouter = new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     base: process.env.BASE_URL, 
     routes:constantRoutes
   })
