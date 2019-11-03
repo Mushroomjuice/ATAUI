@@ -58,7 +58,7 @@ const actions = {
     // roles: ['config','atasetting','suitconfig']
     generateRoutes({ commit }, roles) {
       return new Promise(resolve => {
-        let accessedRoutes
+        let accessedRoutes = null
         // 将roles中提供的路由和asyncRoutes中的路由匹配
         
         accessedRoutes = filterAsyncRoutes(asyncRoutes,roles)

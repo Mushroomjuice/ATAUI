@@ -29,7 +29,7 @@ router.beforeEach(async(to,from,next) => {
                               const { roles } = await store.dispatch('user/getInfo')
                               console.log('已经获取roles')
                               const accessRoutes = await store.dispatch('asyncRoutes/generateRoutes', roles)
-                              // console.log('11111', accessRoutes)
+                              console.log('11111', accessRoutes)
                               router.addRoutes(accessRoutes)
                               next({ ...to, replace: true })
                               NProgress.done()

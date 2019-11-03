@@ -1,7 +1,7 @@
 import {getToken ,setToken,removeToken,} from '@/utils/auth'
 import {login,getInfo,logout} from '@/api/user'
 // import store from '@/store'
-// import { resetRouter } from '@/router'
+// import router, { resetRouter } from '@/router'
 
 
 

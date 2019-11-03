@@ -52,13 +52,8 @@ export default {
     methods: {
         async logout(){
             await this.$store.dispatch('user/logout')
-            // const { roles } = await this.$store.dispatch('user/getInfo')
-            // const roles  = this.$store.getters.roles                  
             await this.$store.dispatch('asyncRoutes/generateRoutes', [])
-            // console.log(roles)
             resetRouter()
-        
-            // this.$router.addRoutes(accessRoutes)
             this.$router.push({path:'/home'})
         }
     },

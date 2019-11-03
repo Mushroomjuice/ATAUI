@@ -50,9 +50,13 @@ export default {
     
     methods:{
         handlelogin(){
-            this.$store.dispatch('user/login',this.loginform).then(() => {
-            this.$router.push({path:`/`})
+            this.$store.dispatch('user/login',this.loginform)
+            .then(() => {
+            this.$router.push({path:'/'})
                 
+            })
+            .catch(error => {
+                console.log(error)
             })
         }
     }
