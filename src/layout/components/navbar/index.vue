@@ -1,6 +1,4 @@
 <template>
-      
-      
       <el-header class="app-header">
            <el-row>
                  <el-col :span="4">

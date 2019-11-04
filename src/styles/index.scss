@@ -10,6 +10,9 @@ html {
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
+  -webkit-scrollbar {
+    display:none;
+  }
 }
 
 *,
@@ -36,12 +39,13 @@ body {
 }
 .app-wrapper {
   height: 100%;
+  
 }
 
 // .element::-webkit-scrollbar { width: 0 !important }
-::-webkit-scrollbar {
-  display:none;
-}
+// ::-webkit-scrollbar {
+//   display:none;
+// }
 
 // 设置a标签全局样式
 a:focus,
@@ -60,4 +64,16 @@ a:hover {
 div:focus {
   outline: none;
 }
+
+.el-table th{
+  background-color: #eeeeee;
+  padding-top: 3px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  font-size: 15px;
+  font-weight:bolder;
+  color:#000000
+}
+
 

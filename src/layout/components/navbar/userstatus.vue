@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-col :span="2">
+        <el-col :span="4">
             
                 <template>
                     <div class="user">
@@ -8,11 +8,9 @@
                         <span>{{username}}</span>
                     </div>
                 </template>
-                
-            
             
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
             <router-link to="/login" v-if="!token">
             <el-button style="text">
                 <svg-icon icon-class='login' class="loginicon"></svg-icon>
