@@ -15,9 +15,7 @@ export default {
             Title,
       },
       computed: {
-            // mainheight: function(){
-            //       return this.$store.getters.pageheight +'px'
-            // }
+            
       },
 }
 </script>

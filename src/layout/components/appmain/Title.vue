@@ -21,6 +21,7 @@ export default {
             padding-bottom:5px;
             padding-top:5px;
             text-align: left;
+           
             
 
         }

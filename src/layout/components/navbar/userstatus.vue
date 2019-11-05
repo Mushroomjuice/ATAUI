@@ -12,19 +12,13 @@
         </el-col>
         <el-col :span="4">
             <router-link to="/login" v-if="!token">
-            <el-button style="text">
                 <svg-icon icon-class='login' class="loginicon"></svg-icon>
                 <span>login</span>
-            </el-button>
             </router-link>
-            <el-button v-else @click="logout">
+            <div v-else @click="logout">
                 <svg-icon icon-class='logout' class="loginicon"></svg-icon>
                 <span>logout</span>
-            </el-button>
-           
-
-           
-            
+            </div>
         </el-col>
     </div>
         
