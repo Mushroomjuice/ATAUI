@@ -52,9 +52,7 @@ export default {
         handlelogin(){
             this.$store.dispatch('user/login',this.loginform)
             .then(() => {
-                this.$router.push({path:'/',query:'d'})
-            
-                
+                this.$router.push({path:'/',name:'Home'})
             })
             .catch(error => {
                 console.log(error)

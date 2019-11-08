@@ -63,6 +63,7 @@
                                 type="text"
                                 style="width:100px;"
                                 @click="console.log(scope.row.id)"
+                                v-if="checkButtonPermission('uutlist','add')"
                                 >Poweroff</el-button>
                             </el-dropdown-item>
                             <el-dropdown-item>
@@ -114,7 +115,9 @@
             </el-table-column>
             <el-table-column label="elapsed_time" prop="elapsed_time"></el-table-column>
         </el-table>
-
+        <el-dialog>
+            
+        </el-dialog>
 
         <el-row>
             <el-col :span="18">
@@ -127,6 +130,7 @@
 </template>
 <script>
 import {getuutlist} from '@/api/uut'
+import checkButtonPermission from '@/utils/button-permission'
 export default {
     name :'UutList',
     data() {
@@ -159,7 +163,8 @@ export default {
         },
         ShowTestResult() {
             console.log('sucess')
-        }
+        },
+        checkButtonPermission
     },
     computed: {
         uutlist: function(){

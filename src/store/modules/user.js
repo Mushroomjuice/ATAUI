@@ -10,7 +10,7 @@ import {login,getInfo,logout} from '@/api/user'
 const state = {
       token: getToken(),
       name:'',
-      roles:[],
+      roles:null,
 }
 
 
@@ -48,7 +48,7 @@ const actions = {
                   logout(state.token).then(() => {
                         
                         commit('SET_TOKEN', '')
-                        commit('SET_ROLES', [])
+                        commit('SET_ROLES', null)
                         commit("SET_NAME",'')
                         
                         removeToken()

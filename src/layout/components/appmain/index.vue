@@ -15,6 +15,9 @@ export default {
             Title,
       },
       computed: {
+             key() {
+                  return this.$route.path
+            }
             
       },
 }

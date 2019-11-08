@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
-
+import getpagetitle from '@/utils/page-title'
 
 NProgress.configure({ showSpinner: true }) // NProgress Configuration
 
@@ -12,15 +12,17 @@ NProgress.configure({ showSpinner: true }) // NProgress Configuration
 
 router.beforeEach(async(to,from,next) => {
       NProgress.start()
+      // set page title
+      document.title = getpagetitle(to.meta.title)
       const hasToken=getToken()
       if(hasToken) {
             if(to.path === '/login') {
                   next({path:'/home'})
                   NProgress.done()
             }else{
-                  const hasRoles = store.getters.roles && store.getters.roles.length > 0
-                  if(hasRoles){
-                        console.log('获取roles之后')
+                  const hasRoles = store.getters.roles
+                  // console.log(hasRoles)
+                  if(hasRoles != null){
                         next()
                   } else {
                         try{
@@ -32,7 +34,7 @@ router.beforeEach(async(to,from,next) => {
                               
                               router.addRoutes(accessRoutes)
                               
-                              next({ to, replace: true })   //不让返回到登录界面 后期如果要添加跳转带参数的路由可以用 ...to (扩展运算符)
+                              next({ ...to, replace: true })   //不让返回到登录界面 后期如果要添加跳转带参数的路由可以用 ...to (扩展运算符)
                               NProgress.done()
                         } catch (error) {
                               Message.error(error || 'Has Error')

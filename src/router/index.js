@@ -40,9 +40,8 @@ export const constantRoutes = [
         hidden:true
       },
 
-      
-
-    ]
+    ],
+   
 
     
   },
@@ -148,13 +147,55 @@ export const asyncRoutes = [
     path:'/query',
     component: Layout,
     meta:{title:'Query',icon:'query'},
-    children:[]
+    children:[
+      {
+        path:'bomquery',
+        component: () => import('@/views/query/bomquery/index.vue'),
+        name:'bomquery',
+        meta:{title:'Bom Query'}
+      },
+      {
+        path:'macquery',
+        component: () => import('@/views/query/macquery/index.vue'),
+        name:'macquery',
+        meta:{title:'Mac Query'}
+      },
+      {
+        path:'snquery',
+        component: () => import('@/views/query/snquery/index.vue'),
+        name:'snquery',
+        meta:{title:'Sn Query'}
+      },
+      {
+        path:'sqlquery',
+        component: () => import('@/views/query/sqlquery/index.vue'),
+        name:'sqlquery',
+        meta:{title:'SQL Query'}
+      },
+      {
+        path:'logquery',
+        component: () => import('@/views/query/logquery/index.vue'),
+        name:'logquery',
+        meta:{title:'Log Query'}
+      },
+    ]
   },
   {
     path:'/utilities',
     component:Layout,
     name:'utilities',
     meta:{title:'Utilities',icon:'spanner'}
+  },
+  {
+    path:'/permission',
+    component:Layout,
+    
+    meta:{title:'Permission',icon:'permission'},
+    children:[{
+      path:'',
+      component: () => import('@/views/permission/index.vue'),
+      meta:{title:'Permission'}
+    }]
   }
 ]
 

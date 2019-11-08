@@ -1,14 +1,18 @@
 <template>
     <div class="ata-title">
-        <h1 class="title-font">{{title}}</h1>
+        <h1 class="title-font">{{getpagetitle($route.meta.title)}}</h1>
         <hr style="margin-bottom:0px;margin-top:0px;">
     </div>
 </template>
 
 <script>
+import getpagetitle from '@/utils/page-title'
 export default {
     name:'Title',
-    props:["title"]
+    props:["title"],
+    methods:{
+        getpagetitle
+    }
 }
 </script>
 

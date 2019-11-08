@@ -1,24 +1,27 @@
 <template>
     <div>
-        <el-col :span="4">
-            
+        <el-col :span="2" :offset="12">
                 <template>
                     <div class="user">
                         <svg-icon icon-class='user' class="usericon"></svg-icon>
                         <span>{{username}}</span>
                     </div>
                 </template>
-            
         </el-col>
-        <el-col :span="4">
+        <el-col :span="2">
             <router-link to="/login" v-if="!token">
-                <svg-icon icon-class='login' class="loginicon"></svg-icon>
-                <span>login</span>
+                <span>
+                    <svg-icon icon-class='login' class="loginicon"></svg-icon>
+                    <span>login</span>
+                </span>
             </router-link>
-            <div v-else @click="logout">
-                <svg-icon icon-class='logout' class="loginicon"></svg-icon>
-                <span>logout</span>
-            </div>
+            <span v-else @click="logout">
+                <el-button type="text">
+                    <svg-icon icon-class='logout' class="loginicon"></svg-icon>
+                    <span>logout</span>
+                </el-button>
+                
+            </span>
         </el-col>
     </div>
         
@@ -63,4 +66,12 @@ export default {
 .loginicon {
     margin-right: 10px;
 }
+// .el-col{
+//     margin: 0px;
+// }
+
+.el-button {
+    color: #ffffff;
+  }
+
 </style>

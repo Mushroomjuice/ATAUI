@@ -23,7 +23,8 @@ function hasPermission(route, roles) {
    */
   export function filterAsyncRoutes(routes, roles) {
     const res = []
-  
+    
+    
     routes.forEach(route => {
       const tmp = { ...route }
       
@@ -62,8 +63,9 @@ const actions = {
       return new Promise(resolve => {
         let accessedRoutes = null
         // 将roles中提供的路由和asyncRoutes中的路由匹配
-        
-        try { accessedRoutes = filterAsyncRoutes(asyncRoutes,roles)} catch(error) {
+        const roleskeys = Object.keys(roles)
+        // console.log(roleskeys)
+        try { accessedRoutes = filterAsyncRoutes(asyncRoutes,roleskeys)} catch(error) {
           console.log(error)
         }
         // console.log(accessedRoutes)
