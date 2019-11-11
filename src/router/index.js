@@ -37,6 +37,7 @@ export const constantRoutes = [
         path:'uutlist',
         component:() => import('@/views/uutlist/index.vue'),
         name:'uutlist',
+        meta:{ title:'uutlist'},
         hidden:true
       },
 

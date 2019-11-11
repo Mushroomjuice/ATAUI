@@ -1,5 +1,5 @@
 
-
+//保存当前页面宽度和高度的数据
 const state = {
     height: document.documentElement.clientHeight,
     width:document.documentElement.clientWidth

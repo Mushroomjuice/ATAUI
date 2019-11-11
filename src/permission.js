@@ -6,14 +6,13 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getpagetitle from '@/utils/page-title'
 
-NProgress.configure({ showSpinner: true }) // NProgress Configuration
-
-
+NProgress.configure({ showSpinner: true }) // NProgress Configuration 页面切换时的进度条
 
 router.beforeEach(async(to,from,next) => {
       NProgress.start()
-      // set page title
+      // set page title 设置页面title
       document.title = getpagetitle(to.meta.title)
+      //从cookie获取token
       const hasToken=getToken()
       if(hasToken) {
             if(to.path === '/login') {

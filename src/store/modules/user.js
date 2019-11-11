@@ -5,12 +5,12 @@ import {login,getInfo,logout} from '@/api/user'
 
 
 
-
+//保存当前用户的数据
 
 const state = {
       token: getToken(),
       name:'',
-      roles:null,
+      roles:null, //用户可以访问的页面，已经对应页面的权限
 }
 
 
@@ -34,10 +34,19 @@ const actions = {
             return new Promise((resolve,reject) => {
                   login({username:username.trim(), password:password}).then(response => {
                         // 解构赋值
-                        const { data } = response
-                        commit('SET_TOKEN', data.token)
-                        setToken(data.token)
-                        resolve()
+                        if(response.status == 404){
+                              this.$alert(this.$t("login.user_pawd_error"), "Error", {
+                              type: "error"
+                              });
+                        }
+                        else{
+                              const { data } = response
+                              commit('SET_TOKEN', data.token)
+                              setToken(data.token)
+
+                              resolve()
+                        }
+                        
                   }).catch(error => {
                         reject(error)
                   })

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
       return request({
-        url: '/user/login',
+        url: '/api-token-auth/',
         method: 'post',
         params:data
       })
@@ -23,6 +23,14 @@ export function logout(token) {
     url:'user/logout',
     method:'post',
     params:{ token }
+  })
+}
+
+export function regist(data){
+  return request({
+    url:"/regist/user_regist/",
+    method:'post',
+    params:data
   })
 }
     

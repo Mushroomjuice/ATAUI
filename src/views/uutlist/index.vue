@@ -2,7 +2,44 @@
     <div>
         <el-row>
             <el-col :span="2">
-                <el-input v-model="searchinput"></el-input>
+                <el-dropdown split-button type="primary">
+                    {{$t('uut.operation')}}
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                            <el-button type="text" style="width:100px;">
+                                {{$t("uut.poweroff")}}
+                            </el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button type="text" style="width:100px;">
+                                {{$t("uut.reboot")}}
+                            </el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button type="text" style="width:100px;">
+                                {{$t("uut.delete")}}
+                            </el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button type="text" style="width:100px;">
+                                {{$t("uut.continue")}}
+                            </el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button type="text" style="width:100px;">
+                                {{$t("uut.monitor")}}
+                            </el-button>
+                        </el-dropdown-item>
+
+                        <div ></div>
+
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </el-col>
+            <el-col :span="4" :offset="18">
+                <el-input v-model="searchinput">
+                    <el-button slot="append" icon="el-icon-search"></el-button>
+                </el-input>
             </el-col>
         </el-row>
         <el-table
@@ -188,3 +225,23 @@ export default {
     },
 }
 </script>
+
+
+<style lang="scss" scoped>
+.el-dropdown-link {
+    cursor: pointer;
+}
+.el-dropdown-menu__item{
+    padding: 0px;
+}
+.el-dropdown-item{
+    width: 120px;
+}
+.el-input .el-input--suffix .el-input__inner{
+    padding: 0px;
+    height: 30px;
+}
+.el-input__icon {
+    display: none;
+}
+</style>
