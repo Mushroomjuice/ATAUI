@@ -7,3 +7,10 @@ export function getuutlist() {
       
     })
   }
+
+export function getmodulars(){
+  return request({
+    url:'/keyword/test_modular',
+    method:'get'
+  })
+}

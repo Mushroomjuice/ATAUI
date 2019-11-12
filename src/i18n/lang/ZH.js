@@ -28,4 +28,5 @@ export const uut ={
     delete:'删除',
     continue:'继续',
     monitor:'监控',
+    choicerefreshtime:'设置刷新频率:'
 }

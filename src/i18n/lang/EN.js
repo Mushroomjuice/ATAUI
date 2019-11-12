@@ -29,5 +29,6 @@ export const uut ={
     delete:'Delete',
     continue:'Continue',
     monitor:'Monitor',
+    choicerefreshtime:'Refresh Every(Seconds):'
 
 }
