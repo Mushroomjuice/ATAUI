@@ -2,7 +2,7 @@
     <div>
 
         <el-row>
-            <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="2">
+            <el-col :span="4">
                 <el-dropdown split-button type="primary" v-if='showuutoperations'>
                     {{$t('uut.operation')}}
                     <el-dropdown-menu slot="dropdown">
@@ -42,7 +42,7 @@
                 </el-dropdown>
                 
             </el-col>
-            <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" v-if='showuutoperations'>
+            <el-col :span="4" :offset="16" v-if='showuutoperations'>
                 <el-input v-model="searchinput">
                     <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
@@ -79,24 +79,29 @@
             <el-table-column label="Item" prop="current_item" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column label="RESULT" prop="result">
                 <template slot-scope="scope">
-                    <div slot="reference" v-if="scope.row.result==='inprocessing'" >
-                        
-                            <svg-icon icon-class='inprocessing' class="inprocessing" style="display:inline-block" ></svg-icon>
-                            <!-- <i class="el-icon-loading"></i> -->
-                            <!-- <i style="color:#007f00" class="fa fa-cog fa-spin fa-fw"></i> -->
-                    </div>
-                    <div v-else-if="scope.row.result==='pass'">
-                        <svg-icon icon-class='pass' class="pass"></svg-icon>
-                    </div>
-                    <div v-else-if="scope.row.result==='fail'">
-                        <svg-icon icon-class='fail' class="fail"></svg-icon>
-                    </div>
-                    <div v-else-if="scope.row.result==='failing'">
-                        <svg-icon icon-class='failing' class="failing"></svg-icon>
-                    </div>
-                    <div v-else>
-                        <svg-icon icon-class='pause' class="pause"></svg-icon>
-                    </div>
+                    <el-button type="text" @click="displayUUTDetailInfo(scope.row.id,scope.row.pcid,scope.row.order)">
+
+                        <div v-if="scope.row.result==='inprocessing'" >
+                            
+                                <svg-icon icon-class='inprocessing' class="inprocessing" style="display:inline-block" ></svg-icon>
+                                <!-- <i class="el-icon-loading"></i> -->
+                                <!-- <i style="color:#007f00" class="fa fa-cog fa-spin fa-fw"></i> -->
+                        </div>
+                        <div v-else-if="scope.row.result==='pass'">
+                            <svg-icon icon-class='pass' class="pass"></svg-icon>
+                        </div>
+                        <div v-else-if="scope.row.result==='fail'">
+                            <svg-icon icon-class='fail' class="fail"></svg-icon>
+                        </div>
+                        <div v-else-if="scope.row.result==='failing'">
+                            <svg-icon icon-class='failing' class="failing"></svg-icon>
+                        </div>
+                        <div v-else>
+                            <svg-icon icon-class='pause' class="pause"></svg-icon>
+                        </div>
+                    </el-button>
+
+                    
                 </template>
 
             </el-table-column>
@@ -164,7 +169,10 @@
             </el-table-column>
             <el-table-column label="elapsed_time" prop="elapsed_time" :show-overflow-tooltip="true"></el-table-column>
         </el-table>
-        <el-dialog>
+        <el-dialog
+        :visible.sync="showuutdetailinfo"
+        
+        >
             
         </el-dialog>
         
@@ -173,7 +181,7 @@
             <el-col :span="10" style="text-align:left">
                 
                     {{$t('uut.choicerefreshtime')}}
-                    <el-select v-model="uutRefreshChoiceshow" @change="uutRefreshChoiceChange" v-if='showuutrefresh'>
+                    <el-select v-model="uutRefreshChoiceshow" @change="uutRefreshChoiceChange" v-if='showuutrefresh' class="refreshselect">
                         <el-option 
                         v-for="item in uutRefreshChoiceArray" 
                         :key='item.key'
@@ -196,7 +204,7 @@
     </div>
 </template>
 <script>
-import {getuutlist,getmodulars} from '@/api/uut'
+import {getuutlist,getmodulars,getuutdetailinfo} from '@/api/uut'
 import checkButtonPermission from '@/utils/button-permission'
 export default {
     name :'UutList',
@@ -224,6 +232,13 @@ export default {
             },
             showuutoperations:false,
             showuutrefresh:true, //当要操作uut时关闭频率选择，避免不必要的bug
+            showuutdetailinfo:false,
+            uutDetailInfo:{
+                title_sn:'',
+                title_order:'',
+                uut_id:'',
+                detail_info:null,
+            }
             
             
         }
@@ -297,7 +312,7 @@ export default {
         ShowTestResult() {
             console.log('sucess')
         },
-        checkButtonPermission,
+        checkButtonPermission,//按钮权限判断函数
         getmodulars(){
             getmodulars().then(response => {
                 this.modulars = response.data.data
@@ -307,6 +322,16 @@ export default {
             })
 
         },
+        displayUUTDetailInfo(uut_id, uut_pcid, uut_order){
+            
+            this.showuutdetailinfo = true
+            this.uutdetailinfoloading = true
+            getuutdetailinfo().then(response => {
+                response.data.results
+            })
+            console.log(uut_id, uut_pcid, uut_order)
+        }
+
     },
     computed: {
         uutlist: function(){
@@ -314,7 +339,7 @@ export default {
 
         },
         tableheight: function(){
-            return this.$store.getters.pageheight-189 +'px'
+            return this.$store.getters.pageheight-190 +'px'
         }
         
 
@@ -344,7 +369,12 @@ export default {
     padding-bottom: 10px;
     white-space: pre-line;
 }
-
+::v-deep .refreshselect{
+    height: 36px;
+    .el-input--suffix .el-input__inner{
+        height: 36px;
+    }
+}
 
 .el-dropdown-link {
     cursor: pointer;
