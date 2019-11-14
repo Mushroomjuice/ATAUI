@@ -29,6 +29,33 @@ export const uut ={
     delete:'Delete',
     continue:'Continue',
     monitor:'Monitor',
-    choicerefreshtime:'Refresh Every(Seconds):'
+    choicerefreshtime:'Refresh Every(Seconds):',
+
+    register_time:'Register_Time',
+    order:'Order',
+    pcid:'Pcid',
+    mac_sn:'MAC/SN',
+    item:'Item',
+    route_step:'MES',
+    result:'Result',
+    link:'Link',
+    elapsed_time:'Duration',
+
+
+
+
+
+
+
+
+    detail_item:'Item',
+    detail_expectation:'Exceptation',
+    detail_validation:'Validation',
+    detail_result:'Result',
+    detail_elapsed_time:'Duration',
+    refresh_button:'Refresh',
+    close_button:'Close'
+
+
 
 }

@@ -28,5 +28,25 @@ export const uut ={
     delete:'删除',
     continue:'继续',
     monitor:'监控',
-    choicerefreshtime:'设置刷新频率:'
+    choicerefreshtime:'设置刷新频率:',
+
+
+    register_time:'开始时间',
+    order:'订单',
+    pcid:'Pcid',
+    mac_sn:'MAC/SN',
+    item:'测试项',
+    route_step:'工站',
+    result:'测试结果',
+    link:'Link',
+    elapsed_time:'耗时',
+
+
+    detail_item:'测试项',
+    detail_expectation:'期望值',
+    detail_validation:'实际值',
+    detail_result:'结果',
+    detail_elapsed_time:'耗时',
+    refresh_button:'刷新',
+    close_button:'关闭',
 }

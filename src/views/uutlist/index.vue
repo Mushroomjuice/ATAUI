@@ -60,24 +60,25 @@
             :height="tableheight"
             highlight-current-row
             @selection-change="selectchange"
+            tooltip-effect="light"
             
            
             >
             <el-table-column type='selection'>
 
             </el-table-column>
-            <el-table-column label="register_time" prop="register_time" sortable="true" :show-overflow-tooltip="true">
+            <el-table-column :label="$t('uut.register_time')" prop="register_time" sortable="true" :show-overflow-tooltip="true">
 
             </el-table-column>
-            <el-table-column label="order" prop="order" :show-overflow-tooltip="true" >
+            <el-table-column :label="$t('uut.order')" prop="order" :show-overflow-tooltip="true" >
 
             </el-table-column>
-            <el-table-column label="PCID" prop="pcid" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="MAC/SN" prop="mac" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="Item" prop="current_item" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="MES" prop="route_step" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="Item" prop="current_item" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="RESULT" prop="result">
+            <el-table-column :label="$t('uut.pcid')" prop="pcid" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column :label="$t('uut.mac_sn')" prop="mac" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column :label="$t('uut.item')" prop="current_item" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column :label="$t('uut.route_step')" prop="route_step" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column :label="$t('uut.item')" prop="current_item" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column :label="$t('uut.result')" prop="result">
                 <template slot-scope="scope">
                     <el-button type="text" @click="displayUUTDetailInfo(scope.row.id,scope.row.pcid,scope.row.order)">
 
@@ -105,11 +106,13 @@
                 </template>
 
             </el-table-column>
-            <el-table-column label="LINK" prop="link">
+            <el-table-column :label="$t('uut.link')" prop="active">
                 <template slot-scope="scope">
                     <el-dropdown placement="right">
                         <el-button type='text'>
-                            <svg-icon icon-class='circle' class="circle"></svg-icon>
+                            <svg-icon icon-class='pass' class="pass" v-if="scope.row.active"></svg-icon>
+                            <svg-icon icon-class='fail' class="fail" v-else></svg-icon>
+                            
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
@@ -167,12 +170,88 @@
                 </template>
 
             </el-table-column>
-            <el-table-column label="elapsed_time" prop="elapsed_time" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column :label="$t('uut.elapsed_time')" prop="elapsed_time" :show-overflow-tooltip="true"></el-table-column>
         </el-table>
         <el-dialog
-        :visible.sync="showuutdetailinfo"
-        
-        >
+            :visible.sync="showuutdetailinfo"
+            top="3vh"
+            width="95%"
+            center
+            :show-close='false'
+            :close="uutDetailInfoClose"
+            :close-on-click-modal="false"
+            
+            >
+            <div>
+                <h1>SN: {{uutDetailInfo.title_sn}}&nbsp;&nbsp; Order: {{uutDetailInfo.title_order}}</h1>
+            </div>
+            <el-table
+                v-loading="uutdetailinfoloading"
+                
+                :data="uutDetailInfo.detail_info"
+                cell-class-name="test-table"
+                :height="uutdetailtableheight"
+                highlight-current-row
+                :cell-style="{'white-space':'pre-line'}"
+                
+                
+            > 
+                <el-table-column 
+                    prop="item_name"
+                    :label="$t('uut.detail_item')"
+                    :min-width="uut_detail_page_width[0]"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="expectation"
+                    :label="$t('uut.detail_expectation')"
+                    :min-width="uut_detail_page_width[1]"
+                >
+                    <!-- <template slot-scope="scope">
+                        
+                            
+                        
+                    </template> -->
+
+                </el-table-column>
+                <el-table-column 
+                    prop="validation"
+                    :label="$t('uut.detail_validation')"
+                    :min-width="uut_detail_page_width[2]"
+                >
+                </el-table-column>
+                <el-table-column 
+                    prop="result"
+                    :label="$t('uut.detail_result')"
+                    :min-width="uut_detail_page_width[3]"
+                >
+                </el-table-column>
+                <el-table-column 
+                    prop="elapsed_time"
+                    :label="$t('uut.detail_elapsed_time')"
+                    :min-width="uut_detail_page_width[4]"
+                >
+                </el-table-column>
+            </el-table>
+            <hr>
+            <div slot="footer">
+                <el-row>
+                <el-col :span='2'>
+                    <el-button @click="displayUUTDetailInfo(uutDetailInfo.uut_id,uutDetailInfo.title_sn,uutDetailInfo.title_order)">
+                        {{$t('uut.refresh_button')}}
+                    </el-button>
+                </el-col>
+                <el-col :span="2" :offset="20">
+                    <el-button @click="uutDetailInfoClose">
+                        {{$t('uut.close_button')}}
+                    </el-button>
+                </el-col>
+
+                </el-row>
+            </div>
+            
+            
+            
             
         </el-dialog>
         
@@ -233,12 +312,15 @@ export default {
             showuutoperations:false,
             showuutrefresh:true, //当要操作uut时关闭频率选择，避免不必要的bug
             showuutdetailinfo:false,
+            uutdetailinfoloading:true,
             uutDetailInfo:{
-                title_sn:'',
-                title_order:'',
-                uut_id:'',
+                title_sn:'', //dialog 头部显示
+                title_order:'', //dialog 头部显示
+                uut_id:'', // 用于查询uutdetailinfo
                 detail_info:null,
-            }
+            },
+            uut_detail_page_width: ["10%", "25%", "25%", "5%", "10%"] //table列宽度百分比
+
             
             
         }
@@ -258,6 +340,72 @@ export default {
         this.uutRefreshTimer=null
     },
     methods: {
+        secondToHMS(val) {
+            /*
+            把秒转换成时分秒的形式
+            */
+            if (!val || val == "undefined") {
+                return "00h:00m:00s";
+            }
+            var h = val / 3600;
+            var m = (val % 3600) / 60;
+            var s = (val % 3600) % 60;
+            h = h < 10 ? "0" + parseInt(h) : parseInt(h);
+            m = m < 10 ? "0" + parseInt(m) : parseInt(m);
+            s = s < 10 ? "0" + parseInt(s) : parseInt(s);
+            return h + "h:" + m + "m:" + s + "s";
+        },
+        secondToYMDHMS(val) {
+            //把时间戳转换成年月日时分秒 日期
+            var date = "";
+            if (!val || val == "undefined") {
+                return "";
+            }
+            if (Date.now() / val > 10) {
+                date = new Date(val * 1000);
+            } else {
+                date = new Date(val);
+            }
+            var Y = date.getFullYear() + "-";
+            var M =
+                (date.getMonth() + 1 < 10
+                ? "0" + (date.getMonth() + 1)
+                : date.getMonth() + 1) + "-";
+            var D =
+                date.getDate() < 10 ? "0" + date.getDate() + " " : date.getDate() + " ";
+
+            var h = date.getHours();
+            h = h < 10 ? "0" + h : h;
+            var m = date.getMinutes();
+            m = m < 10 ? "0" + m : m;
+            var s = date.getSeconds();
+            s = s < 10 ? "0" + s : s;
+            return Y + M + D + h + ":" + m + ":" + s;
+        },
+        calcElapsedTime(start_time) {
+            var elapsed_time_sec = Date.now() / 1000 - start_time;
+            return this.secondToHMS(elapsed_time_sec);
+        },
+        webAddBr: function(row) {
+            /*
+            定义期望值和实际值的展示样式
+            */
+            var info = "";
+            for (var i = 0; i < row.length; i++) {
+                if (i == row.length - 1) {
+                info = info + row[i];
+                } else {
+                info = info + row[i] + "\n";
+                }
+            }
+            return info;
+        },
+        testResultFormat(val) {
+            if (val == "inprocessing") {
+                return "In Processing";
+            }
+            return val.toUpperCase();
+        },
         // //定时器
         createuutRefreshTimer(){
             this.uutRefreshTimer = setInterval(this.getUutlist, Number(this.uutRefreshChoice)* 1000)  
@@ -302,8 +450,35 @@ export default {
             }
             
             getuutlist().then(response => {
-                this.uut.list = response.data.results
+                let res_result = response.data.results
                 // console.log(response)
+
+                
+                for (var i = 0; i < res_result.length; i++) {
+                    // 变换elapsed_time
+                    res_result[i].elapsed_time = res_result[i].elapsed_time_str;
+                    // 变换register_time
+                    res_result[i].register_time = res_result[i].start_time_str;
+                    // 变换current_item
+                    if (res_result[i].current_item) {
+                        res_result[i].current_item =
+                        res_result[i].current_item +
+                        "(" +
+                        res_result[i].current_item_index +
+                        "/" +
+                        res_result[i].test_item_count +
+                        ")";
+                    }
+                    // 变换active
+                    if (res_result[i].status && res_result[i].status == "online") {
+                        res_result[i].active = true;
+                    } else {
+                        res_result[i].active = false;
+                    }
+                }
+                
+
+                this.uut.list = res_result
                 this.listloading = false
             }).catch(error => {
                 console.log(error)
@@ -323,13 +498,64 @@ export default {
 
         },
         displayUUTDetailInfo(uut_id, uut_pcid, uut_order){
-            
             this.showuutdetailinfo = true
             this.uutdetailinfoloading = true
-            getuutdetailinfo().then(response => {
-                response.data.results
+            this.uutDetailInfo.uut_id = uut_id
+
+            //获取uutdetailinfo
+            getuutdetailinfo(this.uutDetailInfo.uut_id).then(response => {
+                var res_result = response.data.results;
+                // 设置edit字段为false
+                res_result = res_result.map(v => {
+                    this.$set(v, "edit", false);
+                    return v})
+                //处理数据
+                for (var i = 0; i < res_result.length; i++) {
+                    /* 变换elapsed_time*/
+                    var elapsed_time = res_result[i].elapsed_time;
+                    var start_time = res_result[i].start_time;
+                    var elapsed_time_str = "";
+                    if (elapsed_time && elapsed_time != "0") {
+                        elapsed_time_str = this.secondToHMS(elapsed_time);
+                    } else if (start_time && start_time != 0) {
+                        elapsed_time_str = this.calcElapsedTime(start_time);
+                    } else {
+                        elapsed_time_str = this.secondToHMS(0);
+                    }
+                    res_result[i].elapsed_time = elapsed_time_str;
+                    /* 变化 expectation validation */
+                    if (res_result[i].expectation && res_result[i].validation) {
+                        res_result[i].expectation = this.webAddBr(
+                        res_result[i].expectation
+                        );
+                        res_result[i].validation = this.webAddBr(res_result[i].validation);
+                    }
+                    if (res_result[i].result) {
+                        res_result[i].result = this.testResultFormat(res_result[i].result);
+                    }
+                    }
+
+
+                this.uutDetailInfo.detail_info= res_result
+                
+                this.uutDetailInfo.title_sn = uut_pcid
+                this.uutDetailInfo.title_order = uut_order
+                this.uutdetailinfoloading = false
+                console.log(this.uutDetailInfo.detail_info)
+            }).catch(error => {
+                console.log(error)
             })
-            console.log(uut_id, uut_pcid, uut_order)
+            
+        },
+        uutDetailInfoClose(){
+            this.uutDetailInfo = {
+                title_sn:'', //dialog 头部显示
+                title_order:'', //dialog 头部显示
+                uut_id:'', // 用于查询uutdetailinfo
+                detail_info:null,
+            }
+            this.showuutdetailinfo=false
+            this.uutdetailinfoloading = true
         }
 
     },
@@ -340,6 +566,10 @@ export default {
         },
         tableheight: function(){
             return this.$store.getters.pageheight-190 +'px'
+        },
+        uutdetailtableheight: function(){
+
+            return this.$store.getters.pageheight * 0.7 + 'px'
         }
         
 
@@ -362,7 +592,7 @@ export default {
 ::v-deep .el-table td{
      padding: 0px;
  }
-::v-deep .el-table .test-table{
+::v-deep  .el-table .test-table{
     padding-right: 0px;
     padding-left: 0px;
     padding-top: 10px;

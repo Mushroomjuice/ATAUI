@@ -77,3 +77,36 @@ div:focus {
 }
 
 
+.el-table{
+  font-size: 12px;
+}
+
+
+.el-dialog__body {
+  padding-top: 0px;
+  padding-bottom: 0px !important;
+  color: #606266;
+  line-height: 24px;
+}
+
+.el-dialog__footer {
+  padding-top: 8px;
+  padding-bottom: 10px;
+  text-align: right;
+  box-sizing: border-box;
+}
+
+.el-dialog__header {
+  background-color: #EEEEEE;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.toprow{
+  padding-bottom: 1px;
+}
+

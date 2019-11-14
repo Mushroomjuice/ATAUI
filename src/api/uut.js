@@ -17,7 +17,7 @@ export function getmodulars(){
 
 export function getuutdetailinfo(data){
   return request({
-    url:'/uut/test_info_web/'+ data +'/',
+    url:'/uut/test_info_web/'+ data,
     method:'get',
     
   })
