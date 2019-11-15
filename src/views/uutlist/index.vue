@@ -44,12 +44,12 @@
             </el-col>
             <el-col :span="4" :offset="16" v-if='showuutoperations'>
                 <el-input v-model="searchinput">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="SearchuutInfo">{{$t('uut.search')}}</el-button>
                 </el-input>
             </el-col>
             <el-col :span="4" :offset="20" v-else>
-                <el-input v-model="searchinput">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-input v-model="searchinput" clearable >
+                    <el-button slot="append" icon="el-icon-search" @click="SearchuutInfo">{{$t('uut.search')}}</el-button>
                 </el-input>
             </el-col>
         </el-row>
@@ -64,21 +64,21 @@
             
            
             >
-            <el-table-column type='selection'>
+            <el-table-column type='selection' >
 
             </el-table-column>
-            <el-table-column :label="$t('uut.register_time')" prop="register_time" sortable="true" :show-overflow-tooltip="true">
+            <el-table-column :label="$t('uut.register_time')" prop="register_time" sortable="true" :show-overflow-tooltip="true" :min-width="uut_list_page_width[0]">
 
             </el-table-column>
-            <el-table-column :label="$t('uut.order')" prop="order" :show-overflow-tooltip="true" >
+            <el-table-column :label="$t('uut.order')" prop="order"  :min-width="uut_list_page_width[1]">
 
             </el-table-column>
-            <el-table-column :label="$t('uut.pcid')" prop="pcid" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column :label="$t('uut.mac_sn')" prop="mac" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column :label="$t('uut.item')" prop="current_item" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column :label="$t('uut.route_step')" prop="route_step" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column :label="$t('uut.item')" prop="current_item" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column :label="$t('uut.result')" prop="result">
+            <el-table-column :label="$t('uut.pcid')" prop="pcid" :show-overflow-tooltip="true" :min-width="uut_list_page_width[2]"></el-table-column>
+            <el-table-column :label="$t('uut.mac_sn')" prop="mac" :show-overflow-tooltip="true" :min-width="uut_list_page_width[3]"></el-table-column>
+            <el-table-column :label="$t('uut.item')" prop="current_item" :show-overflow-tooltip="true" :min-width="uut_list_page_width[4]"></el-table-column>
+            <el-table-column :label="$t('uut.route_step')" prop="route_step" :show-overflow-tooltip="true" :min-width="uut_list_page_width[5]"></el-table-column>
+            
+            <el-table-column :label="$t('uut.result')" prop="result" :min-width="uut_list_page_width[6]">
                 <template slot-scope="scope">
                     <el-button type="text" @click="displayUUTDetailInfo(scope.row.id,scope.row.pcid,scope.row.order)">
 
@@ -106,7 +106,7 @@
                 </template>
 
             </el-table-column>
-            <el-table-column :label="$t('uut.link')" prop="active">
+            <el-table-column :label="$t('uut.link')" prop="active" :min-width="uut_list_page_width[7]">
                 <template slot-scope="scope">
                     <el-dropdown placement="right">
                         <el-button type='text'>
@@ -170,9 +170,11 @@
                 </template>
 
             </el-table-column>
-            <el-table-column :label="$t('uut.elapsed_time')" prop="elapsed_time" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column :label="$t('uut.elapsed_time')" prop="elapsed_time" :show-overflow-tooltip="true" :min-width="uut_list_page_width[8]"></el-table-column>
         </el-table>
+
         <el-dialog
+        
             :visible.sync="showuutdetailinfo"
             top="3vh"
             width="95%"
@@ -187,7 +189,7 @@
             </div>
             <el-table
                 v-loading="uutdetailinfoloading"
-                
+                border
                 :data="uutDetailInfo.detail_info"
                 cell-class-name="test-table"
                 :height="uutdetailtableheight"
@@ -257,7 +259,7 @@
         
             <el-row>
             <!-- 定时器 -->
-            <el-col :span="10" style="text-align:left">
+            <el-col :span="9" style="text-align:left">
                 
                     {{$t('uut.choicerefreshtime')}}
                     <el-select v-model="uutRefreshChoiceshow" @change="uutRefreshChoiceChange" v-if='showuutrefresh' class="refreshselect">
@@ -272,8 +274,15 @@
                 
                 
             </el-col>
-            <el-col :span="4" :offset="1" >
-                <el-pagination>
+            <el-col :span="10"  >
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :total="uut_list_count"
+                    :page-size="100"
+                    :page-sizes="[100,uut_list_count]"
+                    layout="total, sizes, prev, pager, next, jumper"
+                >
 
                 </el-pagination>
             </el-col>
@@ -319,7 +328,26 @@ export default {
                 uut_id:'', // 用于查询uutdetailinfo
                 detail_info:null,
             },
-            uut_detail_page_width: ["10%", "25%", "25%", "5%", "10%"] //table列宽度百分比
+            uut_list_count:0, //用于分页组件显示总条数
+            uut_list_offset:0, //默认起始页
+            uut_list_limit:100, //默认每页请求条数
+            uut_list_order_by:"-link",
+
+
+
+
+            uut_detail_page_width: ["10%", "25%", "25%", "5%", "10%"], //table列宽度百分比
+            uut_list_page_width:[
+                "14%", // Start time
+                "11%", // Order
+                "10%", // PCID
+                "10%", // MAC/SN
+                "24%", // Item
+                "10%", // Route Step
+                "5%", // Test status
+                "5%", // Link status
+                "10%" // Duration
+            ]
 
             
             
@@ -340,6 +368,82 @@ export default {
         this.uutRefreshTimer=null
     },
     methods: {
+
+        SearchuutInfo(){
+            //搜索按钮点击事件
+            console.log(this.searchinput)
+            let searchlist = (this.searchinput && this.searchinput.toLowerCase()).split(" ")
+            if(searchlist){
+                this.listloading=true
+                getuutlist(this.uut_list_offset,this.uut_list_limit,this.uut_list_order_by).then(response => {
+                    let res_result = response.data.results
+                    // console.log(response)
+
+                    
+                    for (var i = 0; i < res_result.length; i++) {
+                        // 变换elapsed_time
+                        res_result[i].elapsed_time = res_result[i].elapsed_time_str;
+                        // 变换register_time
+                        res_result[i].register_time = res_result[i].start_time_str;
+                        // 变换current_item
+                        if (res_result[i].current_item) {
+                            res_result[i].current_item =
+                            res_result[i].current_item +
+                            "(" +
+                            res_result[i].current_item_index +
+                            "/" +
+                            res_result[i].test_item_count +
+                            ")";
+                        }
+                        // 变换active
+                        if (res_result[i].status && res_result[i].status == "online") {
+                            res_result[i].active = true;
+                        } else {
+                            res_result[i].active = false;
+                        }
+                    }
+                    
+
+                    
+                    this.uut_list_count = response.data.count
+                    
+                }).catch(error => {
+                    console.log(error)
+                })
+                let filter_item = this.uut.list.filter(function(item) {
+                    //console.log(Object.keys(item));
+                    return searchlist.every(key1 => {
+                        return Object.keys(item).some(key2 => {
+                            return String(item[key2]).toLowerCase().match(key1);
+                        })
+
+                    });
+                });
+
+                this.uut.list = filter_item
+                this.listloading = false
+                
+            }else{
+                return false
+            }
+
+
+
+
+        },
+
+
+        // uutlist请求要根据分页的数据请求不同数量的请求
+        handleSizeChange(val){
+            // 分页 数量改变
+            this.uut_list_limit = val
+            this.getUutlist('first')
+        },
+        handleCurrentChange(val){
+            //分页 当前页数改变时的函数
+            this.uut_list_offset = (val - 1) * this.uut_summary_limit;
+            this.getUutlist('first')
+        },
         secondToHMS(val) {
             /*
             把秒转换成时分秒的形式
@@ -448,8 +552,8 @@ export default {
             if(val =='first'){
                 this.listloading = true
             }
-            
-            getuutlist().then(response => {
+            // 请求的查询参数要根据设置的分页数调整
+            getuutlist(this.uut_list_offset,this.uut_list_limit,this.uut_list_order_by).then(response => {
                 let res_result = response.data.results
                 // console.log(response)
 
@@ -479,6 +583,7 @@ export default {
                 
 
                 this.uut.list = res_result
+                this.uut_list_count = response.data.count
                 this.listloading = false
             }).catch(error => {
                 console.log(error)
@@ -538,6 +643,7 @@ export default {
 
                 this.uutDetailInfo.detail_info= res_result
                 
+                
                 this.uutDetailInfo.title_sn = uut_pcid
                 this.uutDetailInfo.title_order = uut_order
                 this.uutdetailinfoloading = false
@@ -575,10 +681,10 @@ export default {
 
     },
     watch: {
-        searchinput:function(){
-            // alert('ok')
-            this.uut.list = []
-        },
+        // searchinput:function(){
+        //     // alert('ok')
+        //     this.uut.list = []
+        // },
         // tableheight: () => {
         //     this.tableheight =this.$store.getters.pageheight
         // }

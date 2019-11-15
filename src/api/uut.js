@@ -1,8 +1,13 @@
 import request from '@/utils/request'
 
-export function getuutlist() {
+export function getuutlist(offset,limit,order_by) {
     return request({
-      url: '/uut/info',
+      url: '/uut/uut_info/?offset=' +
+      offset +
+      "&limit=" +
+      limit +
+      "&ordering=" +
+      order_by,
       method: 'get',
       
     })

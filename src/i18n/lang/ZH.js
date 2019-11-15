@@ -29,6 +29,7 @@ export const uut ={
     continue:'继续',
     monitor:'监控',
     choicerefreshtime:'设置刷新频率:',
+    search:'搜索',
 
 
     register_time:'开始时间',

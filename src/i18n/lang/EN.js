@@ -40,6 +40,7 @@ export const uut ={
     result:'Result',
     link:'Link',
     elapsed_time:'Duration',
+    search:'Search',
 
 
 
