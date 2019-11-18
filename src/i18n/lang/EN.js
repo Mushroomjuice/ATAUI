@@ -49,13 +49,17 @@ export const uut ={
 
 
 
+
     detail_item:'Item',
     detail_expectation:'Exceptation',
     detail_validation:'Validation',
     detail_result:'Result',
     detail_elapsed_time:'Duration',
     refresh_button:'Refresh',
-    close_button:'Close'
+    close_button:'Close',
+    edit_test_info:'Edit',
+    update_success:'Update Successful!',
+    update_fail:'Update Fail!',
 
 
 

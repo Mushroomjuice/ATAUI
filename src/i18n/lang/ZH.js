@@ -50,4 +50,7 @@ export const uut ={
     detail_elapsed_time:'耗时',
     refresh_button:'刷新',
     close_button:'关闭',
+    edit_test_info:'编辑',
+    update_success:'更新成功!',
+    update_fail:'更新失败!',
 }

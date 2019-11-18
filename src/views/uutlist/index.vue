@@ -43,7 +43,7 @@
                 
             </el-col>
             <el-col :span="4" :offset="16" v-if='showuutoperations'>
-                <el-input v-model="searchinput">
+                <el-input v-model="searchinput" clearable>
                     <el-button slot="append" icon="el-icon-search" @click="SearchuutInfo">{{$t('uut.search')}}</el-button>
                 </el-input>
             </el-col>
@@ -62,28 +62,24 @@
             @selection-change="selectchange"
             tooltip-effect="light"
             
-           
             >
             <el-table-column type='selection' >
-
             </el-table-column>
             <el-table-column :label="$t('uut.register_time')" prop="register_time" sortable="true" :show-overflow-tooltip="true" :min-width="uut_list_page_width[0]">
-
+                <template slot-scope="scope">
+                    <span @click="clickCell">{{scope.row.register_time}}</span>
+                </template>
             </el-table-column>
             <el-table-column :label="$t('uut.order')" prop="order"  :min-width="uut_list_page_width[1]">
-
             </el-table-column>
             <el-table-column :label="$t('uut.pcid')" prop="pcid" :show-overflow-tooltip="true" :min-width="uut_list_page_width[2]"></el-table-column>
             <el-table-column :label="$t('uut.mac_sn')" prop="mac" :show-overflow-tooltip="true" :min-width="uut_list_page_width[3]"></el-table-column>
             <el-table-column :label="$t('uut.item')" prop="current_item" :show-overflow-tooltip="true" :min-width="uut_list_page_width[4]"></el-table-column>
             <el-table-column :label="$t('uut.route_step')" prop="route_step" :show-overflow-tooltip="true" :min-width="uut_list_page_width[5]"></el-table-column>
-            
             <el-table-column :label="$t('uut.result')" prop="result" :min-width="uut_list_page_width[6]">
                 <template slot-scope="scope">
                     <el-button type="text" @click="displayUUTDetailInfo(scope.row.id,scope.row.pcid,scope.row.order)">
-
-                        <div v-if="scope.row.result==='inprocessing'" >
-                            
+                        <div v-if="scope.row.result==='inprocessing'" > 
                                 <svg-icon icon-class='inprocessing' class="inprocessing" style="display:inline-block" ></svg-icon>
                                 <!-- <i class="el-icon-loading"></i> -->
                                 <!-- <i style="color:#007f00" class="fa fa-cog fa-spin fa-fw"></i> -->
@@ -101,18 +97,14 @@
                             <svg-icon icon-class='pause' class="pause"></svg-icon>
                         </div>
                     </el-button>
-
-                    
                 </template>
-
             </el-table-column>
             <el-table-column :label="$t('uut.link')" prop="active" :min-width="uut_list_page_width[7]">
                 <template slot-scope="scope">
                     <el-dropdown placement="right">
                         <el-button type='text'>
                             <svg-icon icon-class='pass' class="pass" v-if="scope.row.active"></svg-icon>
-                            <svg-icon icon-class='fail' class="fail" v-else></svg-icon>
-                            
+                            <svg-icon icon-class='fail' class="fail" v-else></svg-icon>        
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
@@ -172,9 +164,7 @@
             </el-table-column>
             <el-table-column :label="$t('uut.elapsed_time')" prop="elapsed_time" :show-overflow-tooltip="true" :min-width="uut_list_page_width[8]"></el-table-column>
         </el-table>
-
         <el-dialog
-        
             :visible.sync="showuutdetailinfo"
             top="3vh"
             width="95%"
@@ -183,7 +173,7 @@
             :close="uutDetailInfoClose"
             :close-on-click-modal="false"
             
-            >
+        >
             <div>
                 <h1>SN: {{uutDetailInfo.title_sn}}&nbsp;&nbsp; Order: {{uutDetailInfo.title_order}}</h1>
             </div>
@@ -195,8 +185,6 @@
                 :height="uutdetailtableheight"
                 highlight-current-row
                 :cell-style="{'white-space':'pre-line'}"
-                
-                
             > 
                 <el-table-column 
                     prop="item_name"
@@ -209,11 +197,10 @@
                     :label="$t('uut.detail_expectation')"
                     :min-width="uut_detail_page_width[1]"
                 >
-                    <!-- <template slot-scope="scope">
-                        
-                            
-                        
-                    </template> -->
+                    <template slot-scope="scope">
+                        <el-input v-if='scope.row.edit' v-model="scope.row.expectation" autosize type="textarea"></el-input>
+                        <span v-else> {{scope.row.expectation}}</span>                        
+                    </template>
 
                 </el-table-column>
                 <el-table-column 
@@ -221,18 +208,70 @@
                     :label="$t('uut.detail_validation')"
                     :min-width="uut_detail_page_width[2]"
                 >
+                    <template slot-scope="scope">
+                        <el-input v-if='scope.row.edit' v-model="scope.row.validation" autosize type="textarea"></el-input>
+                        <span v-else> {{scope.row.validation}}</span>                        
+                    </template>
                 </el-table-column>
                 <el-table-column 
                     prop="result"
                     :label="$t('uut.detail_result')"
                     :min-width="uut_detail_page_width[3]"
                 >
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.edit">
+                            <el-select v-model="scope.row.result" size="small" icon="fa fa-angle-down">
+                                <!-- 这里的pass,fail大小写随意 -->
+                                <el-option value="pass"></el-option>
+                                <el-option value="fail"></el-option>
+                                <el-option value="hold"></el-option>
+                            </el-select>
+                        </template>
+                        <template v-else>
+                            <!-- get detail info 的时候会将格式转化为大写 -->
+                            <span v-if="scope.row.result=='FAIL' || scope.row.result=='FAILING'" style="color:red"
+                            >{{defTestResult(scope.row.result)}}</span>
+                            <span
+                                v-else-if="scope.row.result=='PASS'"
+                                style="color:#007f00"
+                            >{{defTestResult(scope.row.result)}}</span>
+                            <span v-else>{{defTestResult(scope.row.result)}}</span>
+                        </template>
+                    </template>
+                    
                 </el-table-column>
                 <el-table-column 
                     prop="elapsed_time"
                     :label="$t('uut.detail_elapsed_time')"
-                    :min-width="uut_detail_page_width[4]"
+                    :min-width="uut_detail_page_width[3]"
                 >
+                </el-table-column>
+                <el-table-column
+                    prop="edit"
+                    :label="$t('uut.edit_test_info')"
+                    :min-width="uut_detail_page_width[4]"
+                    v-if="checkButtonPermission('uutlist','edit_test_info')"
+                    align="center"
+                >   
+                    <template slot-scope="scope">
+                        <!-- 不在编辑状态，并且不是hold状态的test info可以编辑 -->
+                        <el-button
+                            v-if="!scope.row.edit && scope.row.result!='HOLD'"
+                            type="text"
+                            size="small"
+                            @click="editTestInfo(scope.row)"
+                        >
+                            <svg-icon icon-class='edit' class="edit"></svg-icon>
+                        </el-button>
+                        <el-button v-else 
+                            type="text"
+                            size="small"
+                            @click="saveEditTestInfo(scope.row)"
+                        >
+                            <svg-icon icon-class='save' class="save"></svg-icon>
+
+                        </el-button>
+                    </template>
                 </el-table-column>
             </el-table>
             <hr>
@@ -255,6 +294,43 @@
             
             
             
+        </el-dialog>
+        <!-- UUT Info页面(Test suite, IP, IPMI IP等)开始（点击开始时间显示） -->
+        <el-dialog
+            :visible.sync="show_uut_info_page"
+        >
+            <div>
+                <h1>{{uut_info.uut_id}}</h1>
+            </div>
+            <el-card>
+                <strong>IP :</strong>
+                {{uut_info.uut_ip}}
+                <br>
+                <!-- <strong>Port :</strong>
+                {{uut_info_port}}
+                <br> -->
+                <strong>IPMI :</strong>
+                {{uut_info.uut_IPMI}}
+                <br>
+                <strong>MES/MAC :</strong>
+                {{uut_info.uut_mes_mac_sn}}
+                <br>
+                <strong>SuiteName :</strong>
+                {{uut_info.uut_suit_name}}
+                <br>
+                <strong>Mac :</strong>
+                {{uut_info.uut_all_mac}}
+                <br>
+                <strong>LastUpdate :</strong>
+                {{uut_info.uut_last_update_time}}
+                <br>
+                <strong>Master SN :</strong>
+                {{uut_info.uut_master_sn}}
+                <br>
+                <strong>Location :</strong>
+                {{uut_info.uut_lacation}}
+            </el-card>
+
         </el-dialog>
         
             <el-row>
@@ -292,7 +368,7 @@
     </div>
 </template>
 <script>
-import {getuutlist,getmodulars,getuutdetailinfo} from '@/api/uut'
+import {getuutlist,getmodulars,getuutdetailinfo,updateuutdetailinfo} from '@/api/uut'
 import checkButtonPermission from '@/utils/button-permission'
 export default {
     name :'UutList',
@@ -321,6 +397,7 @@ export default {
             showuutoperations:false,
             showuutrefresh:true, //当要操作uut时关闭频率选择，避免不必要的bug
             showuutdetailinfo:false,
+            show_uut_info_page:false,
             uutdetailinfoloading:true,
             uutDetailInfo:{
                 title_sn:'', //dialog 头部显示
@@ -333,7 +410,18 @@ export default {
             uut_list_limit:100, //默认每页请求条数
             uut_list_order_by:"-link",
 
+            uut_info:{
+                uut_id:'',
+                uut_ip:'',
+                uut_IPMI:'',
+                uut_mes_mac_sn:'',
+                uut_suit_name:'',
+                uut_all_mac:'',
+                uut_last_update_time:'',
+                uut_master_sn:'',
+                uut_lacation:'',
 
+            },
 
 
             uut_detail_page_width: ["10%", "25%", "25%", "5%", "10%"], //table列宽度百分比
@@ -347,7 +435,8 @@ export default {
                 "5%", // Test status
                 "5%", // Link status
                 "10%" // Duration
-            ]
+            ],
+            uut_detail_info_editting:0,
 
             
             
@@ -355,7 +444,7 @@ export default {
     },
     created() {
 
-        //提前请求数据，提升用户体验
+        //提前请求数据
         this.getUutlist('first')
         this.getmodulars()
         this.createuutRefreshTimer()
@@ -368,6 +457,53 @@ export default {
         this.uutRefreshTimer=null
     },
     methods: {
+        clickCell(){
+            this.show_uut_info_page = true
+            this.$message({
+                type: "success",
+                    message: this.$t("uut.update_success")
+            })
+        },
+        defTestResult(val) {
+            if (val == "inprocessing") {
+                return "In Processing";
+            }
+            return val.toUpperCase();
+        },
+        editTestInfo(row){
+            row.edit = true
+            this.uut_detail_info_editting += 1
+        },
+        saveEditTestInfo(row){
+            
+                /*
+            保存修改后的test_info,为了不改变原来的样式,这里需要对原来的样式深拷贝
+            object深拷贝:const tmp = Object.assign({}, row);
+            点击保存按钮,恢复刷新
+            */
+            const tmp = Object.assign({}, row); //object对象深拷贝
+            tmp.expectation = tmp.expectation.split("\n");
+            tmp.validation = tmp.validation.split("\n");
+            delete tmp.elapsed_time //elapsed_time不需要更新
+            let sequence = tmp.sequence
+            let id = this.uutDetailInfo.uut_id
+            updateuutdetailinfo(id,sequence,tmp).then(response => {
+                row.edit = false
+                this.uut_detail_info_editting -= 1
+                console.log(response)
+                if (this.uut_detail_info_editting == 0) {
+                    this.displayUUTDetailInfo(this.uutDetailInfo.uut_id,this.uutDetailInfo.title_sn,this.uutDetailInfo.title_order)
+                }
+                this.$message({
+                    type: "success",
+                    message: this.$t("uut.update_success")
+                });
+            })
+
+
+            
+            
+        },
 
         SearchuutInfo(){
             //搜索按钮点击事件
@@ -402,13 +538,8 @@ export default {
                             res_result[i].active = false;
                         }
                     }
-                    
-
-                    
                     this.uut_list_count = response.data.count
                     
-                }).catch(error => {
-                    console.log(error)
                 })
                 let filter_item = this.uut.list.filter(function(item) {
                     //console.log(Object.keys(item));
@@ -419,12 +550,18 @@ export default {
 
                     });
                 });
-
+                //搜索结果得到后清除定时器
+                clearInterval(this.uutRefreshTimer)
+                this.uutRefreshTimer = null
                 this.uut.list = filter_item
                 this.listloading = false
                 
             }else{
                 return false
+                // 清除搜索的时候要恢复定时器刷新
+                // let timer = this.uutRefreshChoiceshow
+                // console.log(timer)
+                // this.uutRefreshChoiceChange(timer)
             }
 
 
@@ -585,8 +722,6 @@ export default {
                 this.uut.list = res_result
                 this.uut_list_count = response.data.count
                 this.listloading = false
-            }).catch(error => {
-                console.log(error)
             })
         },
         ShowTestResult() {
@@ -596,11 +731,7 @@ export default {
         getmodulars(){
             getmodulars().then(response => {
                 this.modulars = response.data.data
-                
-            }).catch(error => {
-                console.log(error)
             })
-
         },
         displayUUTDetailInfo(uut_id, uut_pcid, uut_order){
             this.showuutdetailinfo = true
@@ -639,19 +770,12 @@ export default {
                         res_result[i].result = this.testResultFormat(res_result[i].result);
                     }
                     }
-
-
                 this.uutDetailInfo.detail_info= res_result
-                
-                
                 this.uutDetailInfo.title_sn = uut_pcid
                 this.uutDetailInfo.title_order = uut_order
                 this.uutdetailinfoloading = false
                 console.log(this.uutDetailInfo.detail_info)
-            }).catch(error => {
-                console.log(error)
             })
-            
         },
         uutDetailInfoClose(){
             this.uutDetailInfo = {
@@ -668,17 +792,13 @@ export default {
     computed: {
         uutlist: function(){
             return this.uut.list
-
         },
         tableheight: function(){
             return this.$store.getters.pageheight-190 +'px'
         },
         uutdetailtableheight: function(){
-
             return this.$store.getters.pageheight * 0.7 + 'px'
         }
-        
-
     },
     watch: {
         // searchinput:function(){

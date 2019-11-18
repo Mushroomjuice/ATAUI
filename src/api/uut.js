@@ -27,3 +27,18 @@ export function getuutdetailinfo(data){
     
   })
 }
+
+
+export function updateuutdetailinfo(id,sequence,data){
+  return request({
+    url:"/uut/test_info_web/" +
+    id +
+    "/" +
+    sequence +
+    "/",
+    method:'post',
+    data
+  })
+  
+
+}
