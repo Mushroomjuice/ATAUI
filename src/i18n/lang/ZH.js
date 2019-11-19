@@ -53,4 +53,25 @@ export const uut ={
     edit_test_info:'编辑',
     update_success:'更新成功!',
     update_fail:'更新失败!',
+
+    confirm_delete:'确认删除?',
+    sure:'确认',
+    cancel:'删除',
+    delete_success:'删除成功!',
+}
+
+
+export const suite = {
+    name:'名称',
+    create_date:'创建时间',
+    create_user:'创建用户',
+    delete:'删除',
+
+    create:'创建',
+
+    confirm_delete:'确认删除?',
+    sure:'确认',
+    cancel:'删除',
+    delete_success:'删除成功!',
+
 }

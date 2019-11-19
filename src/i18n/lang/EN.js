@@ -64,3 +64,20 @@ export const uut ={
 
 
 }
+
+
+export const suite = {
+    name:'Name',
+    create_date:'Create_Date',
+    create_user:'Create_User',
+    delete:'Delete',
+
+    create:'Create',
+
+
+    confirm_delete:'Do you want to delete this note?',
+    sure:'Sure',
+    cancel:'Cancel',
+    delete_success:'Delete Successful!',
+
+}

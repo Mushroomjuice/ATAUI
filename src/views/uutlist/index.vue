@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <el-row>
             <el-col :span="4">
                 <el-dropdown split-button type="primary" v-if='showuutoperations'>
@@ -60,14 +59,14 @@
             :height="tableheight"
             highlight-current-row
             @selection-change="selectchange"
-            tooltip-effect="light"
+            
             
             >
             <el-table-column type='selection' >
             </el-table-column>
             <el-table-column :label="$t('uut.register_time')" prop="register_time" sortable="true" :show-overflow-tooltip="true" :min-width="uut_list_page_width[0]">
                 <template slot-scope="scope">
-                    <span @click="clickCell">{{scope.row.register_time}}</span>
+                    <span @click="clickCell(scope.row)">{{scope.row.register_time}}</span>
                 </template>
             </el-table-column>
             <el-table-column :label="$t('uut.order')" prop="order"  :min-width="uut_list_page_width[1]">
@@ -298,37 +297,41 @@
         <!-- UUT Info页面(Test suite, IP, IPMI IP等)开始（点击开始时间显示） -->
         <el-dialog
             :visible.sync="show_uut_info_page"
+            class="uut_info_card"
         >
             <div>
-                <h1>{{uut_info.uut_id}}</h1>
+                <h1>UUID: {{uut_info.uut_id}}</h1>
             </div>
-            <el-card>
-                <strong>IP :</strong>
-                {{uut_info.uut_ip}}
-                <br>
-                <!-- <strong>Port :</strong>
-                {{uut_info_port}}
-                <br> -->
-                <strong>IPMI :</strong>
-                {{uut_info.uut_IPMI}}
-                <br>
-                <strong>MES/MAC :</strong>
-                {{uut_info.uut_mes_mac_sn}}
-                <br>
-                <strong>SuiteName :</strong>
-                {{uut_info.uut_suit_name}}
-                <br>
-                <strong>Mac :</strong>
-                {{uut_info.uut_all_mac}}
-                <br>
-                <strong>LastUpdate :</strong>
-                {{uut_info.uut_last_update_time}}
-                <br>
-                <strong>Master SN :</strong>
-                {{uut_info.uut_master_sn}}
-                <br>
-                <strong>Location :</strong>
-                {{uut_info.uut_lacation}}
+            <el-card >
+                <div >
+                    <strong>IP :</strong>
+                    {{uut_info.uut_ip}}
+                    <br>
+                    <!-- <strong>Port :</strong>
+                    {{uut_info_port}}
+                    <br> -->
+                    <strong>IPMI :</strong>
+                    {{uut_info.uut_IPMI}}
+                    <br>
+                    <strong>MES/MAC :</strong>
+                    {{uut_info.uut_mes_mac_sn}}
+                    <br>
+                    <strong>SuiteName :</strong>
+                    {{uut_info.uut_suit_name}}
+                    <br>
+                    <strong>Mac :</strong>
+                    {{uut_info.uut_all_mac}}
+                    <br>
+                    <strong>LastUpdate :</strong>
+                    {{uut_info.uut_last_update_time}}
+                    <br>
+                    <strong>Master SN :</strong>
+                    {{uut_info.uut_master_sn}}
+                    <br>
+                    <strong>Location :</strong>
+                    {{uut_info.uut_lacation}}
+                </div>
+                
             </el-card>
 
         </el-dialog>
@@ -457,12 +460,17 @@ export default {
         this.uutRefreshTimer=null
     },
     methods: {
-        clickCell(){
+        clickCell(row){
             this.show_uut_info_page = true
-            this.$message({
-                type: "success",
-                    message: this.$t("uut.update_success")
-            })
+            this.uut_info.uut_id = row.id
+            this.uut_info.uut_ip = row.ip
+            this.uut_info.uut_IPMI = row.ipmi_ip
+            this.uut_info.uut_mes_mac_sn = row.mes_mac_sn
+            this.uut_info.uut_suit_name = row.suite_name
+            this.uut_info.uut_all_mac =row.all_mac
+            this.uut_info.uut_last_update_time =this.secondToYMDHMS(row.link)
+            this.uut_info.uut_master_sn =row.master_system_id
+            this.uut_info.uut_lacation = row.lacation
         },
         defTestResult(val) {
             if (val == "inprocessing") {
@@ -514,7 +522,6 @@ export default {
                 getuutlist(this.uut_list_offset,this.uut_list_limit,this.uut_list_order_by).then(response => {
                     let res_result = response.data.results
                     // console.log(response)
-
                     
                     for (var i = 0; i < res_result.length; i++) {
                         // 变换elapsed_time
@@ -694,7 +701,7 @@ export default {
                 let res_result = response.data.results
                 // console.log(response)
 
-                
+                console.log(res_result.length)
                 for (var i = 0; i < res_result.length; i++) {
                     // 变换elapsed_time
                     res_result[i].elapsed_time = res_result[i].elapsed_time_str;
@@ -815,6 +822,11 @@ export default {
 
 <style lang="scss" scoped>
 //参考 https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8
+
+.uut_info_card {
+    text-align: left
+}
+
 ::v-deep .el-table td{
      padding: 0px;
  }
@@ -851,7 +863,7 @@ export default {
 
 
 .el-row {
-    text-align: center;
+    // text-align: center;
     margin-bottom: 20px;
     width: 100%;
     margin-left: 0px;

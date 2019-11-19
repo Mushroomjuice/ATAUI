@@ -80,10 +80,10 @@ export const asyncRoutes = [
     meta:{title:'Config', icon:'setting'},
     children:[
       {
-        path:'suitconfig',
-        component: () => import('@/views/config/suitconfig/index.vue'),
-        name:'suitconfig',
-        meta:{title:'Suit Config'}
+        path:'suiteconfig',
+        component: () => import('@/views/config/suiteconfig/index.vue'),
+        name:'suiteconfig',
+        meta:{title:'Suite Config'}
         
       },
       {
