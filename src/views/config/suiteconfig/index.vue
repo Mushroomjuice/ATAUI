@@ -13,10 +13,27 @@
                 </el-button>
             </el-col>
             <!-- test suite 搜索开始 -->
-            <el-col :span="4" :offset="12">
-                <el-input clearable>
-                    <el-button slot="append" icon="el-icon-search">{{$t('uut.search')}}</el-button>
+            <el-col :span="2" :offset="9">
+                <el-select 
+                    v-model="search_condition.key"
+                    placeholder="Search Type"
+                    clearable 
+                >
+                    <el-option 
+                        v-for="item in search_condition_from_server"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                    >
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="2" >
+                <el-input clearable v-model="search_condition.value" placeholder="Value Of Type">
                 </el-input>
+            </el-col>
+            <el-col :span="1" >
+                <el-button  type="primary" icon="el-icon-search"  @click="searchclick">{{$t('uut.search')}}</el-button>
             </el-col>
         </el-row>
         <el-table
@@ -61,7 +78,12 @@
         </el-dialog>
         <el-row style="text-align: center;">
             <el-col :span='24'>
-                <el-pagination>
+                <el-pagination
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="suite_config_count"
+                    @size-change="handleSizeChange"
+                    @current-change='handleCurrentChange'
+                >
 
                 </el-pagination>
             </el-col>
@@ -71,7 +93,7 @@
 </template>
 
 <script>
-import {getSuiteTable, deleteSuiteItem} from '@/api/config'
+import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig} from '@/api/config'
 import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
 export default {
@@ -81,10 +103,25 @@ export default {
             // 默认的分页数据
             limit:10,
             offset:0,
+            suite_config_count: 0,
 
+            // 搜索用的条件
+            search_condition:{
+                key:'',
+                value:''
+            },
+            search_condition_from_server:[
+                'name','id','user'
+            ],
+            // 主页面上显示的信息
             suite_table_data:null,
             suite_table_loading: true,
             suite_table_layout:['10%','5%','25%'],
+
+            //用于显示suite_config的详细信息
+            detail_suite_config_info:null,
+            //点击单元格是将id记录，用于查询详细信息
+            click_cell_name:'',
             
             show_suite_config_delete:false,
             suite_config_selected:'', //选择的config,用于批量删除
@@ -98,21 +135,62 @@ export default {
         this.getSuiteConfigData()
     },
     methods:{
+        // 分页每页数量改变
+        handleSizeChange(val){
+            this.limit = val
+            this.getSuiteConfigData()
+
+
+        },
+        // 分页 页码改变
+        handleCurrentChange(val){
+            this.offset = (val-1) * this.limit
+            this.getSuiteConfigData()
+        },
+
+        // 搜索按钮事件
+        searchclick(){
+            this.getSuiteConfigData()
+        },
+
         //获取suiteconfig的基本信息
         getSuiteConfigData(){
             this.suite_table_loading = true
-            getSuiteTable({limit:10,offset:0}).then(response => {
+            let params = {
+                limit:this.limit,
+                offset:this.offset,
+            }
+            // 将输入的条件加入到查询字符串中
+            if(this.search_condition.key.length > 0 && this.search_condition.value.length > 0){
+                params[this.search_condition.key] = this.search_condition.value
+            }
+            getSuiteTable(params).then(response => {
                 this.suite_table_data = response.data.results
                 this.suite_table_loading = false
+                this.suite_config_count = response.data.count
             })
         },
+        
+
         // 将时间转化成日期
         TimeForFormatter,
         checkButtonPermission,
         
-        suite_table_cell_click(){
+        
+        suite_table_cell_click(row){
+            // 获取详细的suite信息
             this.show_detail_suite_config =true
             this.detail_suite_config_loading =true
+
+            this.click_cell_name = row.name,
+            console.log(row.name)
+
+            getDeatilSuiteConfig(this.click_cell_name).then(response => {
+                let res_result = response.data.suite
+                console.log(res_result)
+            })
+
+
 
 
 

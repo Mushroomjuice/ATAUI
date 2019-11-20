@@ -5,7 +5,7 @@ export function getSuiteTable(data){
     return request({
         url:'/item_suite/test_suite/',
         method:'get',
-        params:{limit:data.limit,offset:data.offset}
+        params:data
     })
 }
 
@@ -15,5 +15,15 @@ export function deleteSuiteItem(data){
         url:'/item_suite/test_suite/',
         method:'delete',
         params:{id:data}
+    })
+}
+
+
+
+export function getDeatilSuiteConfig(id){
+    return request({
+        url:'/item_suite/test_suite/' + id +'/',
+        method:'get',
+        
     })
 }
