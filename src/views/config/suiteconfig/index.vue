@@ -73,9 +73,130 @@
         <el-dialog
             :visible.sync="show_detail_suite_config"
             width="70%"
+            
         >
+            <div slot="title">
+                <h1 >{{click_cell_name}}</h1>
+            </div>
+            <el-table
+                :data="detail_suite_config_info"
+                v-loading="detail_suite_config_loading"
+                :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                row-key="id_for_index"
+                :height="detailtableheight"
+                :indent = 0
+                default-expand-all 
+            >
+               <el-table-column prop="id" :label="$t('suite.test_sequence')">
+                   <template slot-scope='scope'>
+                        <strong v-if='scope.row._title' style="margin-top: 5px;margin-bottom: 5px; font-size:14px;">
+                            {{scope.row.id}}
+                        </strong>
+                        <span
+                            v-else
+                            style="color:#111111;font-size:12px;margin-top: 2px;margin-bottom: 2px;"
+                        >{{scope.row.id}}</span>
+                   </template>
+
+               </el-table-column>
+               <el-table-column prop="name" :label="$t('suite.item')">
+
+               </el-table-column>
+                <el-table-column prop="description" :label="$t('suite.description')">
+                    <template slot-scope="props">
+                        <span
+                        v-if="$storage.getstorage('PLAY_LANG', 'EN') === 'EN'"
+                        style="margin-top: 5px;margin-bottom: 5px;"
+                        >{{props.row.description.en}}</span>
+                        <span
+                        v-else
+                        style="color:#111111;font-size:12px;margin-top: 2px;margin-bottom: 2px;"
+                        >{{props.row.description.zh}}</span>
+                    </template>
+
+                </el-table-column>
+            </el-table>
+            <hr>
+            <div slot="footer">
+                <el-row>
+                <el-col style="text-align:right">
+                    <el-button
+                        type="primary"
+                        v-if="checkButtonPermission('suiteconfig','update') && show_confirm_page"
+                        plain
+                        class="closebutton"
+                    >{{$t('suite.submit')}}
+                    </el-button>
+                    <el-button
+                        type="primary"
+                        v-if="checkButtonPermission('suiteconfig','update')"
+                        plain
+                        @click="showEditSuiteConfig(click_cell_name)"
+                        class="closebutton"
+                    >{{$t('suite.change')}}
+                    </el-button>
+                    <el-button
+                        plain
+                        v-if="checkButtonPermission('suiteconfig','update') && show_confirm_page"
+                        class="closebutton"
+                    >{{$t('suite.close')}}</el-button>
+                    <el-button plain class="closebutton" v-if="checkButtonPermission('suiteconfig','update')" disabled>{{$t('suite.close')}}</el-button>
+                </el-col>
+                </el-row>
+            </div>
 
         </el-dialog>
+
+        <!-- 编辑页面 -->
+        <el-dialog
+            :visible.sync="show_edit_suite_config"
+            width="90%"
+            
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            top="5vh"
+        >
+            <div slot="title">
+                <h1 v-if="click_cell_name==''">{{$t('suite.create')}}</h1>
+                <h1 v-else>{{click_cell_name}}</h1>
+            </div>
+
+            <el-row>
+                <el-col>
+                    <el-form
+                        :v-model="create_detail_suite_config_info"
+                        ref="suite_config_info"
+                        size='mini'
+                    >   
+                        <el-form-item :label="$t('suite.name')" >
+                            <el-input v-model="create_detail_suite_config_info.name"></el-input>
+                        </el-form-item>
+
+                        <el-form-item :label="$t('suite.station')">
+                            <el-select v-model="create_detail_suite_config_info.station">
+                                <el-option v-for="item in suiteStation" :key="item" :label="item" :value="item">
+                                    {{item}}
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+
+                    </el-form>
+                </el-col>
+
+
+            </el-row>
+
+            <el-row>
+
+            </el-row>
+
+
+
+
+        </el-dialog>
+
+
+
         <el-row style="text-align: center;">
             <el-col :span='24'>
                 <el-pagination
@@ -93,7 +214,7 @@
 </template>
 
 <script>
-import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig} from '@/api/config'
+import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation} from '@/api/config'
 import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
 export default {
@@ -101,6 +222,7 @@ export default {
     data() {
         return {
             // 默认的分页数据
+            suiteStation:[],
             limit:10,
             offset:0,
             suite_config_count: 0,
@@ -119,9 +241,23 @@ export default {
             suite_table_layout:['10%','5%','25%'],
 
             //用于显示suite_config的详细信息
-            detail_suite_config_info:null,
-            //点击单元格是将id记录，用于查询详细信息
+
+            detail_suite_config_info:[],
+            
+            //点击单元格是将id记录，用于查询详细信息,和进入编辑页面
             click_cell_name:'',
+
+            show_edit_suite_config:false, //用于显示编辑页面
+            create_detail_suite_config_info:{
+                name:'',
+                station:'',
+                suite:[]
+            },
+
+
+
+
+            show_confirm_page:false, // 用于显示 确认提交的页面
             
             show_suite_config_delete:false,
             suite_config_selected:'', //选择的config,用于批量删除
@@ -133,8 +269,18 @@ export default {
     },
     created(){
         this.getSuiteConfigData()
+        this.getSuiteStation()
     },
     methods:{
+
+        getSuiteStation(){
+            getsuitestation().then(response => {
+                console.log(response.data.data)
+                // 后端接口需要处理
+                this.suiteStation = response.data.data
+
+            })
+        },
         // 分页每页数量改变
         handleSizeChange(val){
             this.limit = val
@@ -176,23 +322,52 @@ export default {
         TimeForFormatter,
         checkButtonPermission,
         
-        
+         // 获取详细的suite信息
         suite_table_cell_click(row){
-            // 获取详细的suite信息
+           
+
             this.show_detail_suite_config =true
             this.detail_suite_config_loading =true
 
             this.click_cell_name = row.name,
             console.log(row.name)
+            this.detail_suite_config_info = []
 
             getDeatilSuiteConfig(this.click_cell_name).then(response => {
-                let res_result = response.data.suite
-                console.log(res_result)
+                var temp = Object.assign({}, response.data.suite);
+                // 将获取的数据整理一下放入detail table中， 引入children 实现子节点树形加载
+                for(let item in temp){
+                    const tmp  = {}
+                    tmp['_title'] = item
+                    tmp['id_for_index'] = item
+                    tmp['id'] = item
+                    tmp['name'] = ''
+                    tmp['description'] = ''
+                    tmp['children'] = []
+                    for (let i = 0; i < temp[item].length; i++){
+                        const childitem = {}
+                        childitem['id_for_index'] = item + i
+                        childitem['id'] = i + 1
+                        childitem['name'] = temp[item][i].name
+                        childitem['description'] = temp[item][i].description
+                        tmp['children'].push(childitem)
+                    }
+                    this.detail_suite_config_info.push(tmp)
+                }
+                this.detail_suite_config_loading = false
+                console.log(this.detail_suite_config_info)
             })
+        },
 
-
-
-
+        // 弹出更改config的页面
+        showEditSuiteConfig(val){
+            // 如果val 有值就是change,没有就是create
+            this.show_edit_suite_config = true
+            this.create_detail_suite_config_info['name'] = val
+            this.create_detail_suite_config_info['station'] = this.suiteStation
+            this.create_detail_suite_config_info['suite'] = this.
+            console.log(val)
+            
 
         },
 
@@ -252,6 +427,9 @@ export default {
 
     },
     computed: {
+        detailtableheight: function(){
+            return this.$store.getters.pageheight - 350 + 'px'
+        },
         tableheight: function(){
             return this.$store.getters.pageheight-190 +'px'
         },

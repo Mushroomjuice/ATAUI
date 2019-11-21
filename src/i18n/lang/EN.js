@@ -80,4 +80,18 @@ export const suite = {
     cancel:'Cancel',
     delete_success:'Delete Successful!',
 
+
+    test_sequence:'Test Sequence',
+    item:"Item",
+    description:'Description',
+    change:'Change',
+    close:'Close',
+    submit:'submit',
+
+    station:'Station',
+    
+
+    
+    
+
 }

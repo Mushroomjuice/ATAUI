@@ -22,8 +22,15 @@ export function deleteSuiteItem(data){
 
 export function getDeatilSuiteConfig(id){
     return request({
-        url:'/item_suite/test_suite/' + id +'/',
+        url:'/item_suite/test_suite/' + id,
         method:'get',
         
+    })
+}
+
+export function getsuitestation(){
+    return request({
+        url:'/keyword/test_station',
+        method:'get'
     })
 }

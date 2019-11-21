@@ -74,4 +74,14 @@ export const suite = {
     cancel:'删除',
     delete_success:'删除成功!',
 
+    test_sequence:'测试顺序',
+    item:"测试项",
+    description:'描述',
+    change:'更改',
+    close:'关闭',
+    submit:'确认',
+
+
+    station:'站点',
+
 }
