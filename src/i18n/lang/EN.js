@@ -89,6 +89,10 @@ export const suite = {
     submit:'submit',
 
     station:'Station',
+    copysuite:'Copy Suite',
+    testitem:'Availdable',
+
+    help:'Help',
     
 
     

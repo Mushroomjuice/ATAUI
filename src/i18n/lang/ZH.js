@@ -83,5 +83,9 @@ export const suite = {
 
 
     station:'站点',
+    copysuite:'复制',
+    testitem:'可选测试项',
+
+    help:'帮助',
 
 }

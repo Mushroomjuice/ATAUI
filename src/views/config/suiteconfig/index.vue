@@ -105,8 +105,8 @@
                 <el-table-column prop="description" :label="$t('suite.description')">
                     <template slot-scope="props">
                         <span
-                        v-if="$storage.getstorage('PLAY_LANG', 'EN') === 'EN'"
-                        style="margin-top: 5px;margin-bottom: 5px;"
+                            v-if="$storage.getstorage('PLAY_LANG', 'EN') === 'EN'"
+                            style="margin-top: 5px;margin-bottom: 5px;"
                         >{{props.row.description.en}}</span>
                         <span
                         v-else
@@ -151,7 +151,6 @@
         <el-dialog
             :visible.sync="show_edit_suite_config"
             width="90%"
-            
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             top="5vh"
@@ -161,42 +160,128 @@
                 <h1 v-else>{{click_cell_name}}</h1>
             </div>
 
-            <el-row>
-                <el-col>
+            <el-row class="form-row">
+                <el-col :span="16" :offset="4">
                     <el-form
                         :v-model="create_detail_suite_config_info"
                         ref="suite_config_info"
                         size='mini'
+                        label-width="15%"
                     >   
-                        <el-form-item :label="$t('suite.name')" >
-                            <el-input v-model="create_detail_suite_config_info.name"></el-input>
+                        <el-form-item :label="$t('suite.name')" prop="name" >
+                            <el-input v-model="create_detail_suite_config_info.name" class="suiteinput"></el-input>
                         </el-form-item>
 
-                        <el-form-item :label="$t('suite.station')">
-                            <el-select v-model="create_detail_suite_config_info.station">
+                        <el-form-item :label="$t('suite.station')" prop="station">
+                            <el-select v-model="create_detail_suite_config_info.station" class="suiteinput">
                                 <el-option v-for="item in suiteStation" :key="item" :label="item" :value="item">
-                                    {{item}}
+                                    <span style="float: left">{{ item }}</span>
                                 </el-option>
                             </el-select>
                         </el-form-item>
-
+                        <el-form-item prop="" :label="$t('suite.copysuite')">
+                            <el-autocomplete 
+                                class="suiteinput"
+                                v-model="chioceForCopySuite"
+                                :fetch-suggestions="querySearch"
+                            >
+                            </el-autocomplete>
+                            <el-button class="copybutton" @click="copySuite" type="primary">{{$t('suite.copysuite')}}</el-button>
+                        </el-form-item>
                     </el-form>
+                    
                 </el-col>
-
-
             </el-row>
-
             <el-row>
-
+                <el-col :span="9" :offset="3">
+                    <el-card>
+                        <div slot="header">
+                            <el-input size="mini">
+                                <template slot="prepend">{{$t('suite.testitem')}}</template>
+                            </el-input>
+                        </div>
+                        <el-table
+                            :data="AllTestItems"
+                            height="300px"
+                            :show-header="false"
+                        >
+                            <el-table-column
+                                type="selection"
+                                align="center"
+                                min-width="10%"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="name"
+                                min-width='80%'
+                            >
+                            </el-table-column>
+                            <!-- <el-table-column
+                                
+                                min-width="10%"
+                            >
+                                <template slot-scope="scope">
+                                    <el-popover
+                                        placement="top-start"
+                                        :title="$t('suite.help')"
+                                        width="200"
+                                        trigger="click"
+                                    >
+                                        <p v-if="$storage.getstorage('PLAY_LANG','EN')==='EN'">{{scope.row.description.en}}</p>
+                                        <p v-else>{{scope.row.description.zh}}</p>
+                                        <el-button
+                                            type="text"
+                                            icon="el-icon-question"
+                                            style="padding:0px;"
+                                            slot="reference"
+                                        >
+                                        </el-button>
+                                    </el-popover>
+                                </template>
+                            </el-table-column> -->
+                        </el-table>
+                    </el-card>
+                </el-col>
+                
+                
             </el-row>
-
-
-
-
+            <hr>
+            <div slot="footer">
+                <el-row>
+                <el-col style="text-align:right">
+                    <el-button
+                    type="primary"
+                    
+                    plain
+                    
+                    class="closebutton"
+                    >{{$t('suite.create')}}</el-button>
+                    <el-button
+                    type="primary"
+                    
+                    plain
+                    
+                    class="closebutton"
+                    >{{$t('suite.reset')}}</el-button>
+                    <el-button
+                    type="primary"
+                    
+                    plain
+                    
+                    class="closebutton"
+                    >{{$t('suite.update')}}</el-button>
+                    <el-button
+                    type="primary"
+                    
+                    plain
+                    
+                    class="closebutton"
+                    >{{$t('suite.delete')}}</el-button>
+                    <el-button plain class="closebutton">{{$t('suite.close')}}</el-button>
+                </el-col>
+                </el-row>
+            </div>
         </el-dialog>
-
-
-
         <el-row style="text-align: center;">
             <el-col :span='24'>
                 <el-pagination
@@ -205,7 +290,6 @@
                     @size-change="handleSizeChange"
                     @current-change='handleCurrentChange'
                 >
-
                 </el-pagination>
             </el-col>
         </el-row>
@@ -214,18 +298,26 @@
 </template>
 
 <script>
-import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation} from '@/api/config'
+import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation,getTestItem} from '@/api/config'
 import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
 export default {
     name:'SuiteConfig',
     data() {
+        
+
+        
         return {
             // 默认的分页数据
             suiteStation:[],
             limit:10,
             offset:0,
             suite_config_count: 0,
+            all_suite_config_count:0, //所有的suite数量，用于请求所有的suite
+            AllSuiteName:[], //所有的suitename 用于输入提示
+            chioceForCopySuite:'', //选择copy的suite名字，用于请求该suite的详细信息，然后用于复制
+            AllTestItems:[], //获取到的所有的TestItem
+            // AllTestItemsForShow: [], //将获取的所有TestItems处理后用于显示
 
             // 搜索用的条件
             search_condition:{
@@ -270,8 +362,65 @@ export default {
     created(){
         this.getSuiteConfigData()
         this.getSuiteStation()
+        this.all_suite_config_count = this.suite_config_count
+        this.getAllSuiteName()
+        this.getAllTestItems()
     },
     methods:{
+
+
+        //copySuite
+        copySuite(){
+            console.log(this.chioceForCopySuite)
+        },
+
+        //输入建议
+        querySearch(queryString, cb){
+            let restaurants = this.AllSuiteName
+            let results = queryString ? restaurants.filter(this.createFliter(queryString)) : restaurants;
+            cb(results)
+
+        },
+        createFliter(queryString){
+            return restaurant => {
+                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase())) === 0;
+            }
+        },
+
+        //获取服务端所有的suite 取得name 为copy suite输入建议用
+        getAllSuiteName(){
+            getSuiteTable({limit:this.all_suite_config_count}).then(response => {
+                let tmp = response.data.results
+                this.AllSuiteName = []
+                for (let i = 0;i < tmp.length;i++){
+                    this.AllSuiteName.push({value:tmp[i].name, lable:tmp[i].name})
+                }
+                console.log(this.AllSuiteName)
+            })
+        },
+        //获取所有的suite item 用于穿梭栏选择
+        getAllTestItems(){
+            getTestItem().then(response => {
+                this.AllTestItems = response.data.results
+                 // 将获取的AllTestItems处理后用于显示
+                // const showdata = [];
+                // const tmp =this.AllTestItems
+                // console.log(tmp)
+                // for(let i = 0; i<tmp.length; i++){
+                //     showdata.push({
+                //         key:tmp[i].name,
+                //         lable:tmp[i].name,
+                        
+                //     })
+                // }
+                // this.AllTestItemsForShow = showdata
+                console.log(this.AllTestItems)
+            })
+        },
+
+        
+        
+        
 
         getSuiteStation(){
             getsuitestation().then(response => {
@@ -311,6 +460,7 @@ export default {
                 params[this.search_condition.key] = this.search_condition.value
             }
             getSuiteTable(params).then(response => {
+
                 this.suite_table_data = response.data.results
                 this.suite_table_loading = false
                 this.suite_config_count = response.data.count
@@ -364,8 +514,8 @@ export default {
             // 如果val 有值就是change,没有就是create
             this.show_edit_suite_config = true
             this.create_detail_suite_config_info['name'] = val
-            this.create_detail_suite_config_info['station'] = this.suiteStation
-            this.create_detail_suite_config_info['suite'] = this.
+            
+            
             console.log(val)
             
 
@@ -447,5 +597,30 @@ export default {
     padding:0px;
 }
 
+.form-row{
+    background: #eeeeee;
+    margin-bottom: 10px;
+    padding-top: 10px;
+}
 
+.suiteinput{
+    width: 30%
+}
+
+::v-deep .el-card__header{
+    background: #eeeeee;
+    padding: 8px;
+}
+::v-deep .el-card__body{
+    padding-top: 5px;
+    padding-bottom: 0px;
+    padding-left: 2px;
+    padding-right: 0px;
+}
+// .copyinput{
+//     widows: 16%;
+// }
+// .copybutton{
+//     width: 10%;
+// }
 </style>

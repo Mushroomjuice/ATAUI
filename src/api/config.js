@@ -34,3 +34,10 @@ export function getsuitestation(){
         method:'get'
     })
 }
+
+export function getTestItem(){
+    return request({
+        url:'/item_suite/test_item/?display=true',
+        method:'get'
+    })
+}
