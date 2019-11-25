@@ -179,7 +179,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item prop="" :label="$t('suite.copysuite')">
+                        <el-form-item  :label="$t('suite.copysuite')">
                             <el-autocomplete 
                                 class="suiteinput"
                                 v-model="chioceForCopySuite"
@@ -193,7 +193,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="9" :offset="3">
+                <el-col :span="9" :offset="1">
                     <el-card>
                         <div slot="header">
                             <el-input size="mini">
@@ -203,7 +203,12 @@
                         <el-table
                             :data="AllTestItems"
                             height="300px"
-                            :show-header="false"
+                            highlight-current-row
+                            @row-dblclick='leftTableRowDBclick'
+                            @selection-change="leftSelectionChange"
+                            
+                            
+                            
                         >
                             <el-table-column
                                 type="selection"
@@ -212,11 +217,18 @@
                             >
                             </el-table-column>
                             <el-table-column
-                                prop="name"
+                                property="name"
                                 min-width='80%'
                             >
                             </el-table-column>
+                            
                             <!-- <el-table-column
+                                prop="id"
+                                
+                            >
+
+                            </el-table-column> -->
+                            <el-table-column
                                 
                                 min-width="10%"
                             >
@@ -238,9 +250,42 @@
                                         </el-button>
                                     </el-popover>
                                 </template>
-                            </el-table-column> -->
+                            </el-table-column>
                         </el-table>
                     </el-card>
+                </el-col>
+                <el-col :span="2" style="text-align:center;padding-top:150px;">
+                    <el-button circle type="primary" @click="leftToRight">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </el-button>
+                </el-col>
+                <el-col :span="9">
+                    <el-card>
+                        <div slot="header">
+                            <el-input size="mini">
+                                <template slot="prepend">{{$t('suite.testitem')}}</template>
+                            </el-input>
+                            <el-table
+                                :data="create_detail_suite_config_info.suite"
+                                height="300px"
+                                @row-dblclick="rightTableRowDBclick"
+                                class="tablesortable"
+                                row-key="index"
+                            >
+                                <el-table-column
+                                    type="selection"
+                                    align="center"
+                                    min-width="10%"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                    prop="name"
+                                >
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </el-card>
+
                 </el-col>
                 
                 
@@ -298,6 +343,7 @@
 </template>
 
 <script>
+import sortable from 'sortablejs'
 import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation,getTestItem} from '@/api/config'
 import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
@@ -316,6 +362,8 @@ export default {
             all_suite_config_count:0, //所有的suite数量，用于请求所有的suite
             AllSuiteName:[], //所有的suitename 用于输入提示
             chioceForCopySuite:'', //选择copy的suite名字，用于请求该suite的详细信息，然后用于复制
+            //显示表头否
+            showheader:false,
             AllTestItems:[], //获取到的所有的TestItem
             // AllTestItemsForShow: [], //将获取的所有TestItems处理后用于显示
 
@@ -340,6 +388,9 @@ export default {
             click_cell_name:'',
 
             show_edit_suite_config:false, //用于显示编辑页面
+
+            leftSelectionItems:[],
+
             create_detail_suite_config_info:{
                 name:'',
                 station:'',
@@ -367,11 +418,80 @@ export default {
         this.getAllTestItems()
     },
     methods:{
+        // 在suite中设置下标
+        setRightIndex() {
+            //对this.create_detail_suite_config_info.suite里面的元素进行深拷贝
+           
+            let tmp_list = []
+            
+            for (let i = 0; i < this.create_detail_suite_config_info.suite.length; i++) {
+                let tmp = Object.assign({},this.create_detail_suite_config_info.suite[i])
+                tmp['index'] = i
+                tmp_list.push(tmp)
+            }
+            this.create_detail_suite_config_info.suite = tmp_list
+            
+        },
 
+        //每次右边表格数据变动之后都要调用该函数，对数据的index进行整理
+        setsort(){
+            const el = document.querySelector('.tablesortable > .el-table__body-wrapper > table > tbody');
+            this.sortable = sortable.create(el,{
+                ghostClass: "sortable-ghost", // Class name for the drop placeholder,
+                animation: 150,
+                // setData: function(dataTransfer) {
+                //     dataTransfer.setData("Text", "");
+                // },
+                delay: 0,
+                setData: function(dataTransfer) {
+                    dataTransfer.setData("Text", "");
+                },
+                onEnd: evt => {
+                    const targetRow = this.create_detail_suite_config_info.suite.splice(evt.oldIndex, 1)[0];
+                    this.create_detail_suite_config_info.suite.splice(evt.newIndex, 0, targetRow);
+                    
+                    console.log(this.create_detail_suite_config_info.suite)
+                }
+            })
+        },
 
+        
+        //中间箭头，将左边数据放到右边
+        leftToRight(){
+            for(let i=0;i<this.leftSelectionItems.length;i++){
+                
+                this.create_detail_suite_config_info.suite.push(this.leftSelectionItems[i])
+            }
+            this.setRightIndex()
+            this.setsort()
+            
+        },
+        //右边双击
+        rightTableRowDBclick(val){
+            this.$nextTick(() => {
+                this.setsort();
+            });
+            this.setRightIndex();
+            this.create_detail_suite_config_info.suite.splice(val.index, 1);
+            this.setRightIndex();
+        },
+        // 左边双击
+        leftTableRowDBclick(val){
+            this.create_detail_suite_config_info.suite.push(val)
+            
+            this.setRightIndex()
+            this.setsort()
+            
+        },
+        // 左边选择改变
+        leftSelectionChange(val){
+            this.leftSelectionItems = val
+            console.log(this.leftSelectionItems)
+        },
         //copySuite
         copySuite(){
             console.log(this.chioceForCopySuite)
+            
         },
 
         //输入建议
