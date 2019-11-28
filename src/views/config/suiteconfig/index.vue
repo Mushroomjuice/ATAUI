@@ -202,10 +202,11 @@
                         </div>
                         <el-table
                             :data="FilterAllTestItems"
-                            height="380px"
+                            height="420px"
                             highlight-current-row
                             @row-dblclick='leftTableRowDBclick'
                             @selection-change="leftSelectionChange"
+                            
                             
                             
                             
@@ -261,19 +262,20 @@
                 </el-col>
                 <el-col :span="9">
                     <el-card>
-                        <!-- <div slot="header"> -->
-                            <!-- <el-input size="mini" v-model="rightInputSearch">
+                        <div slot="header">
+                            <el-input size="mini" v-model="rightInputSearch">
                                 <template slot="prepend">{{$t('suite.testitem')}}</template>
-                            </el-input> -->
-                            <!-- <span>测试顺序</span> -->
-                        <!-- </div> -->
+                            </el-input>
+                            
+                        </div>
                             <el-table
-                                :data="create_detail_suite_config_info.suite"
-                                height="390px"
+                                :data="FliterSelectionItems"
+                                height="380px"
                                 @row-dblclick="rightTableRowDBclick"
                                 class="tablesortable"
                                 row-key="index"
                                 @selection-change="rightTableSelectionChange"
+                                
                             >
                                 <el-table-column
                                     type="selection"
@@ -402,6 +404,7 @@ import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
 
 
+
 export default {
     name:'SuiteConfig',
     data() {
@@ -409,8 +412,7 @@ export default {
 
         
         return {
-            // 如果右边table处于过滤状态，禁用排序
-            // isfilter:true,
+            
             // 默认的分页数据
             suiteStation:[],
             limit:10,
@@ -503,7 +505,7 @@ export default {
         // 在suite中设置下标, 只用于标记对应的item
         setRightIndex() {
             //对this.create_detail_suite_config_info.suite里面的元素进行深拷贝
-           
+            this.rightInputSearch = '' //清空search状态
             let tmp_list = []
             
             for (let i = 0; i < this.create_detail_suite_config_info.suite.length; i++) {
@@ -522,13 +524,16 @@ export default {
             this.sortable = sortable.create(el,{
                 ghostClass: "sortable-ghost", // Class name for the drop placeholder,
                 animation: 150,
-                // sort:function(){
-                //     return !this.isfilter
-                // },
+                
+                // disable:this.isfilter,
                 delay: 0,
                 setData: function(dataTransfer) {
                     dataTransfer.setData("Text", "");
                 },
+                // onStart: async() => {
+                //     this.rightInputSearch = ''
+                    
+                // },
                 onEnd: async(evt) => {
                     console.log(evt.oldIndex,evt.newIndex)
                     const targetRow = this.create_detail_suite_config_info.suite.splice(evt.oldIndex, 1)[0];
@@ -853,43 +858,48 @@ export default {
             return filteritems
         },
     
-        // FliterSelectionItems:function(){
-        //     let input = this.rightInputSearch && this.rightInputSearch.toLowerCase()
-        //     let filteritems
+        FliterSelectionItems:function(){
+            let input = this.rightInputSearch && this.rightInputSearch.toLowerCase()
+            let filteritems = []
             
-        //     if (input) {
+            if (input) {
                 
-        //         filteritems = this.create_detail_suite_config_info.suite.filter(function(item){
-        //             return Object.keys(item).some(function(key){
-        //                 return String(item[key]).toLowerCase().match(input)
-        //             })
-        //         })
-        //     }else{
+                filteritems = this.create_detail_suite_config_info.suite.filter(function(item){
+                    return Object.keys(item).some(function(key){
+                        return String(item[key]).toLowerCase().match(input)
+                    })
+                })
+            }else{
                 
-        //         filteritems = this.create_detail_suite_config_info.suite
-        //     }
-        //     return filteritems
-        // }
+                filteritems = this.create_detail_suite_config_info.suite
+            }
+            
+            return filteritems
+        },
+
     },
-    // watch: {
-    //     rightInputSearch(val){
-    //         console.log(val)
-    //         let input = val
-    //         if (input) {
-    //             this.isfilter = true
-    //             this.setsort()
-    //         }else{
-    //             this.isfilter = false
-    //             this.setsort()
-    //         }
-    //     }
-    // },
+    watch: {
+        rightInputSearch(){
+            if(this.rightInputSearch){
+                const el = document.querySelectorAll('.tablesortable > .el-table__body-wrapper > table > tbody')[0];
+                this.sortable = sortable.create(el,{
+                    sort:false
+            })
+            }else{
+                this.setsort()
+            }
+        }
+    },
+    
 }
 </script>
 
 
 <style lang="scss" scoped>
 
+::v-deep .el-table thead{
+    display: none
+}
 ::v-deep .el-table td{
      padding: 0px;
 }
