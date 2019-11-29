@@ -206,10 +206,7 @@
                             highlight-current-row
                             @row-dblclick='leftTableRowDBclick'
                             @selection-change="leftSelectionChange"
-                            
-                            
-                            
-                            
+                            ref="AllTestTable" 
                         >
                             <el-table-column
                                 type="selection"
@@ -222,13 +219,6 @@
                                 min-width='80%'
                             >
                             </el-table-column>
-                            
-                            <!-- <el-table-column
-                                prop="id"
-                                
-                            >
-
-                            </el-table-column> -->
                             <el-table-column
                                 
                                 min-width="10%"
@@ -266,7 +256,6 @@
                             <el-input size="mini" v-model="rightInputSearch">
                                 <template slot="prepend">{{$t('suite.testitem')}}</template>
                             </el-input>
-                            
                         </div>
                             <el-table
                                 :data="FliterSelectionItems"
@@ -275,7 +264,6 @@
                                 class="tablesortable"
                                 row-key="index"
                                 @selection-change="rightTableSelectionChange"
-                                
                             >
                                 <el-table-column
                                     type="selection"
@@ -291,7 +279,9 @@
                                     prop="index"
                                     min-width="10%"
                                 >
-
+                                    <template slot-scope="scope">
+                                        <span>{{scope.row.index +1}}</span>
+                                    </template>
                                 </el-table-column>
                             </el-table>
                             <el-row >
@@ -305,7 +295,7 @@
                                     <el-button class="select-suite-button" circle  v-if="false">
                                         <i class="el-icon-minus"></i>
                                     </el-button>
-                                    <el-button class="select-suite-button" circle >
+                                    <el-button class="select-suite-button" circle @click="moveItemToBottom">
                                         <i class="el-icon-caret-bottom"></i>
                                     </el-button>
                                     <el-button class="select-suite-button" circle @click="rightTableSelectDelete">
@@ -315,35 +305,9 @@
                                         <i class="el-icon-delete"></i>
                                     </el-button>
                                 </el-col>
-                            </el-row>
-                                
-                           
-                       
+                            </el-row>                       
                     </el-card>
-
                 </el-col>
-                <!-- <el-col :span="2" >
-                     <el-button class="select-suite-button" circle @click="upItemsToTop">
-                        <i class="el-icon-caret-top"></i>
-                        </el-button>
-                        <el-button class="select-suite-button" circle @click="upOneStepItems" v-if="false">
-                            <i class="el-icon-plus"></i>
-                        </el-button>
-                        <el-button class="select-suite-button" circle @click="downOneStepItems" v-if="false">
-                            <i class="el-icon-minus"></i>
-                        </el-button>
-                        <el-button class="select-suite-button" circle @click="downItemsTOBottom">
-                            <i class="el-icon-caret-bottom"></i>
-                        </el-button>
-                        <el-button class="select-suite-button" circle @click="deleteRightcard">
-                            <i class="el-icon-close"></i>
-                        </el-button>
-                        <el-button class="select-suite-button" circle @click="clearRightcard">
-                            <i class="el-icon-delete"></i>
-                        </el-button>
-                </el-col> -->
-                
-                
             </el-row>
             <hr>
             <div slot="footer">
@@ -351,16 +315,12 @@
                 <el-col style="text-align:right">
                     <el-button
                     type="primary"
-                    
                     plain
-                    
                     class="closebutton"
                     >{{$t('suite.create')}}</el-button>
                     <el-button
                     type="primary"
-                    
                     plain
-                    
                     class="closebutton"
                     >{{$t('suite.reset')}}</el-button>
                     <el-button
@@ -398,7 +358,7 @@
 </template>
 
 <script>
-import sortable from 'sortablejs'
+import Sortable from 'sortablejs'
 import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation,getTestItem} from '@/api/config'
 import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
@@ -412,7 +372,9 @@ export default {
 
         
         return {
-            
+            //
+            el:null,
+            sortable:null,
             // 默认的分页数据
             suiteStation:[],
             limit:10,
@@ -483,25 +445,47 @@ export default {
         this.getAllTestItems()
         
     },
-    
     methods:{
-
+        //将选中item置底
+        moveItemToBottom(){
+            //将要置顶的item的index记录
+            let selectitemindex = []
+            for(let i=0;i<this.rigthSelectionItems.length;i++){
+                selectitemindex.push(this.rigthSelectionItems[i]['index'])
+            }
+            console.log(selectitemindex)
+            //将所有元素中除上面选择的item选出来
+            if(selectitemindex.length>0){
+                let newarr = this.create_detail_suite_config_info.suite.filter(item => 
+                !selectitemindex.includes(item['index'])
+            )
+            this.create_detail_suite_config_info.suite = [...newarr, ...this.rigthSelectionItems]
+            this.setRightIndex()
+            this.rigthSelectionItems = []
+            }
+        },
         //将选中的item置顶
         moveItemToTop(){
-            //将勾选的item置顶
-            console.log(this.rigthSelectionItems)
-            for(let i=0;i<this.rigthSelectionItems.leftInputSearch;i++){
-                this.rigthSelectionItems[i]
+            //将要置顶的item的index记录
+            let selectitemindex = []
+            for(let i=0;i<this.rigthSelectionItems.length;i++){
+                selectitemindex.push(this.rigthSelectionItems[i]['index'])
             }
-
+            console.log(selectitemindex)
+            //将所有元素中除上面选择的item选出来
+            if(selectitemindex.length>0){
+                let newarr = this.create_detail_suite_config_info.suite.filter(item => 
+                !selectitemindex.includes(item['index'])
+            )
+            this.create_detail_suite_config_info.suite = [...this.rigthSelectionItems, ...newarr]
+            this.setRightIndex()
+            this.rigthSelectionItems = []
+            }
         },
-
-        //右边表格选择改变是触发的事件
+        //右边表格选择改变触发的事件
         rightTableSelectionChange(val){
             this.rigthSelectionItems = val
-            console.log(this.rigthSelectionItems)
         },
-
         // 在suite中设置下标, 只用于标记对应的item
         setRightIndex() {
             //对this.create_detail_suite_config_info.suite里面的元素进行深拷贝
@@ -513,62 +497,42 @@ export default {
                 tmp['index'] = i
                 tmp_list.push(tmp)
             }
-            this.create_detail_suite_config_info.suite = tmp_list
-            
+            this.create_detail_suite_config_info.suite = tmp_list    
         },
-
         //每次右边表格数据变动之后都要调用该函数，对数据的index进行整理
         setsort(){
-            const el = document.querySelectorAll('.tablesortable > .el-table__body-wrapper > table > tbody')[0];
+            this.el = document.querySelectorAll('.tablesortable > .el-table__body-wrapper > table >tbody')[0];
             // const _this = this
-            this.sortable = sortable.create(el,{
+            console.log(this.el)
+            this.sortable = Sortable.create(this.el,{
                 ghostClass: "sortable-ghost", // Class name for the drop placeholder,
                 animation: 150,
-                
-                // disable:this.isfilter,
-                delay: 0,
                 setData: function(dataTransfer) {
                     dataTransfer.setData("Text", "");
                 },
-                // onStart: async() => {
-                //     this.rightInputSearch = ''
-                    
-                // },
                 onEnd: async(evt) => {
                     console.log(evt.oldIndex,evt.newIndex)
                     const targetRow = this.create_detail_suite_config_info.suite.splice(evt.oldIndex, 1)[0];
                     await this.create_detail_suite_config_info.suite.splice(evt.newIndex, 0, targetRow)
-                    
                     //每次拖动之后重置index，为后面删除提供正确的index
                     let tmp_list = []
-            
                     for (let i = 0; i < this.create_detail_suite_config_info.suite.length; i++) {
                         let tmp = Object.assign({},this.create_detail_suite_config_info.suite[i])
                         tmp['index'] = i
                         tmp_list.push(tmp)
                     }
                     this.create_detail_suite_config_info.suite = tmp_list
-                    
-
                     console.log(this.create_detail_suite_config_info.suite)
                 }
             })
-        },
-
-        
+        },        
         //中间箭头，将左边数据放到右边
         leftToRight(){
-            for(let i=0;i<this.leftSelectionItems.length;i++){
-                
+            for(let i=0;i<this.leftSelectionItems.length;i++){      
                 this.create_detail_suite_config_info.suite.push(this.leftSelectionItems[i])
             }
             this.setRightIndex()
-            this.$nextTick(() => {
-                this.setsort()
-            })
-            
-
-            
+            this.$refs.AllTestTable.clearSelection()
         },
         // 右边全部清除
         rightTableDeleteAll(){
@@ -576,9 +540,6 @@ export default {
         },
         //右边选择后删除
         rightTableSelectDelete(){
-            this.$nextTick(() => {
-                this.setsort();
-            });
             //将要删除的item的index记录
             let selectitemindex = []
             for(let i=0;i<this.rigthSelectionItems.length;i++){
@@ -593,18 +554,11 @@ export default {
                 //this.create_detail_suite_config_info得到新的值
                 this.create_detail_suite_config_info.suite = arr;
                 this.setRightIndex()
+                this.rigthSelectionItems = []              
             }
-            
-
         },
-        
-
-
         //右边双击 删除对应的item
         rightTableRowDBclick(val){
-            this.$nextTick(() => {
-                this.setsort();
-            });
             this.setRightIndex();
             console.log(val.length)
             this.create_detail_suite_config_info.suite.splice(val.index, 1);
@@ -612,15 +566,8 @@ export default {
         },
         // 左边双击
         leftTableRowDBclick(val){
-            this.create_detail_suite_config_info.suite.push(val)
-            
-            this.setRightIndex()
-            //保证在Dom渲染完毕后执行
-            this.$nextTick(() => {
-                this.setsort()
-            })
-            
-            
+            this.create_detail_suite_config_info.suite.push(val) 
+            this.setRightIndex()     
         },
         // 左边选择改变
         leftSelectionChange(val){
@@ -630,22 +577,18 @@ export default {
         //copySuite
         copySuite(){
             console.log(this.chioceForCopySuite)
-            
         },
-
         //输入建议
         querySearch(queryString, cb){
             let restaurants = this.AllSuiteName
             let results = queryString ? restaurants.filter(this.createFliter(queryString)) : restaurants;
             cb(results)
-
         },
         createFliter(queryString){
             return restaurant => {
                 return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase())) === 0;
             }
         },
-
         //获取服务端所有的suite 取得name 为copy suite输入建议用
         getAllSuiteName(){
             getSuiteTable({limit:this.all_suite_config_count}).then(response => {
@@ -661,52 +604,30 @@ export default {
         getAllTestItems(){
             getTestItem().then(response => {
                 this.AllTestItems = response.data.results
-                 // 将获取的AllTestItems处理后用于显示
-                // const showdata = [];
-                // const tmp =this.AllTestItems
-                // console.log(tmp)
-                // for(let i = 0; i<tmp.length; i++){
-                //     showdata.push({
-                //         key:tmp[i].name,
-                //         lable:tmp[i].name,
-                        
-                //     })
-                // }
-                // this.AllTestItemsForShow = showdata
                 console.log(this.AllTestItems)
             })
         },
-
-        
-        
-        
-
         getSuiteStation(){
             getsuitestation().then(response => {
                 console.log(response.data.data)
                 // 后端接口需要处理
                 this.suiteStation = response.data.data
-
             })
         },
         // 分页每页数量改变
         handleSizeChange(val){
             this.limit = val
             this.getSuiteConfigData()
-
-
         },
         // 分页 页码改变
         handleCurrentChange(val){
             this.offset = (val-1) * this.limit
             this.getSuiteConfigData()
         },
-
         // 搜索按钮事件
         searchclick(){
             this.getSuiteConfigData()
         },
-
         //获取suiteconfig的基本信息
         getSuiteConfigData(){
             this.suite_table_loading = true
@@ -725,23 +646,16 @@ export default {
                 this.suite_config_count = response.data.count
             })
         },
-        
-
         // 将时间转化成日期
         TimeForFormatter,
         checkButtonPermission,
-        
          // 获取详细的suite信息
         suite_table_cell_click(row){
-           
-
             this.show_detail_suite_config =true
             this.detail_suite_config_loading =true
-
             this.click_cell_name = row.name,
             console.log(row.name)
             this.detail_suite_config_info = []
-
             getDeatilSuiteConfig(this.click_cell_name).then(response => {
                 var temp = Object.assign({}, response.data.suite);
                 // 将获取的数据整理一下放入detail table中， 引入children 实现子节点树形加载
@@ -767,19 +681,17 @@ export default {
                 console.log(this.detail_suite_config_info)
             })
         },
-
         // 弹出更改config的页面
         showEditSuiteConfig(val){
             // 如果val 有值就是change,没有就是create
             this.show_edit_suite_config = true
             this.create_detail_suite_config_info['name'] = val
-            
-            
+            //页面渲染后加载排序功能
+            this.$nextTick(()=>{
+                this.setsort()
+            })
             console.log(val)
-            
-
         },
-
         //suite table选择改变了
         suite_table_selected_change(val){
             this.suite_config_selected = ''
@@ -794,14 +706,11 @@ export default {
                 }
                 console.log(this.suite_config_selected)
                 this.show_suite_config_delete = true // 显示删除按钮
-
             }else{
                 this.suite_config_selected = ''
                 this.show_suite_config_delete = false
             }
-
         },
-
         // 行末删除按钮 
         deleteSuiteItem(val){
             let delete_item = ''
@@ -832,8 +741,6 @@ export default {
               this.$message({ type: "info", message: this.$t("suite.cancel") });
             });
         },
-        
-
     },
     computed: {
         detailtableheight: function(){
@@ -842,7 +749,6 @@ export default {
         tableheight: function(){
             return this.$store.getters.pageheight-190 +'px'
         },
-
         FilterAllTestItems: function(){
             let input = this.leftInputSearch && this.leftInputSearch.toLowerCase()
             let filteritems
@@ -857,7 +763,6 @@ export default {
             }
             return filteritems
         },
-    
         FliterSelectionItems:function(){
             let input = this.rightInputSearch && this.rightInputSearch.toLowerCase()
             let filteritems = []
@@ -873,27 +778,23 @@ export default {
                 
                 filteritems = this.create_detail_suite_config_info.suite
             }
-            
             return filteritems
         },
-
     },
     watch: {
         rightInputSearch(){
             if(this.rightInputSearch){
-                const el = document.querySelectorAll('.tablesortable > .el-table__body-wrapper > table > tbody')[0];
-                this.sortable = sortable.create(el,{
-                    sort:false
-            })
+                this.$nextTick(()=>{
+                    //将可排序设为fasle
+                    this.sortable.option("disabled", true)// set  
+                })
             }else{
-                this.setsort()
+                this.sortable.option("disabled", false)// set
             }
         }
     },
-    
 }
 </script>
-
 
 <style lang="scss" scoped>
 
@@ -933,10 +834,4 @@ export default {
   color: #fff!important;
   background: #42b983!important;
 }
-// .copyinput{
-//     widows: 16%;
-// }
-// .copybutton{
-//     width: 10%;
-// }
 </style>
