@@ -363,16 +363,10 @@ import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation,getT
 import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
 
-
-
 export default {
     name:'SuiteConfig',
     data() {
-        
-
-        
         return {
-            //
             el:null,
             sortable:null,
             // 默认的分页数据
