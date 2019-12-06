@@ -2,7 +2,7 @@
     <div>
         <el-row>
             <el-col :span="8">
-                <el-button icon="el-icon-edit" type="primary" v-if="checkButtonPermission('suiteconfig','add')">{{$t('suite.create')}}</el-button>
+                <el-button icon="el-icon-edit" type="primary" v-if="checkButtonPermission('suiteconfig','add')" @click="showEditSuiteConfig(click_cell_name)">{{$t('suite.create')}}</el-button>
                 <el-button 
                     icon="el-icon-delete" 
                     type="danger" 
@@ -73,7 +73,9 @@
         <el-dialog
             :visible.sync="show_detail_suite_config"
             width="70%"
-            
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            :show-close="false"
         >
             <div slot="title">
                 <h1 >{{click_cell_name}}</h1>
@@ -140,7 +142,7 @@
                         v-if="checkButtonPermission('suiteconfig','update') && show_confirm_page"
                         class="closebutton"
                     >{{$t('suite.close')}}</el-button>
-                    <el-button plain class="closebutton" v-if="checkButtonPermission('suiteconfig','update')" disabled>{{$t('suite.close')}}</el-button>
+                    <el-button plain class="closebutton" @click="clearDetailInfo">{{$t('suite.close')}}</el-button>
                 </el-col>
                 </el-row>
             </div>
@@ -153,7 +155,9 @@
             width="90%"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
+            :show-close="false"
             top="5vh"
+            
         >
             <div slot="title">
                 <h1 v-if="click_cell_name==''">{{$t('suite.create')}}</h1>
@@ -173,7 +177,7 @@
                         </el-form-item>
 
                         <el-form-item :label="$t('suite.station')" prop="station">
-                            <el-select v-model="create_detail_suite_config_info.station" class="suiteinput">
+                            <el-select v-model="create_detail_suite_config_info.station" class="suiteinput" @change="stationChange">
                                 <el-option v-for="item in suiteStation" :key="item" :label="item" :value="item">
                                     <span style="float: left">{{ item }}</span>
                                 </el-option>
@@ -317,28 +321,96 @@
                     type="primary"
                     plain
                     class="closebutton"
+                    v-if="create_new_suite"
+                    @click="createsuiteconfig"
                     >{{$t('suite.create')}}</el-button>
                     <el-button
                     type="primary"
                     plain
                     class="closebutton"
+                    v-if="create_new_suite"
+                    @click="setConfigListToNull"
                     >{{$t('suite.reset')}}</el-button>
                     <el-button
                     type="primary"
-                    
                     plain
-                    
+                    v-if="!create_new_suite"
                     class="closebutton"
+                    @click="createsuiteconfig"
                     >{{$t('suite.update')}}</el-button>
                     <el-button
                     type="primary"
                     
                     plain
-                    
+                     v-if="!create_new_suite"
                     class="closebutton"
                     >{{$t('suite.delete')}}</el-button>
-                    <el-button plain class="closebutton">{{$t('suite.close')}}</el-button>
+                    <el-button plain class="closebutton" @click="clearEditInfo">{{$t('suite.close')}}</el-button>
                 </el-col>
+                </el-row>
+            </div>
+        </el-dialog> 
+        <el-dialog
+            :visible.sync="show_confirm_suite_config"
+            width="70%"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            
+        >
+            <div slot="title">
+                <h1 style="margin:4px">{{$t('suite.name')}}: {{create_detail_suite_config_info.name}} </h1>
+                <h1 style="margin:4px">{{$t('suite.station')}}: {{create_detail_suite_config_info.station}}</h1>
+            </div>
+            <el-table
+                :data="create_detail_suite_config_info.suite"
+                :height="detailtableheight"
+            >
+                <el-table-column
+                    prop="index"
+                    min-width="10%"
+                >
+                    <template slot-scope="scope">
+                        {{scope.row.index+1}}
+                    </template>
+
+
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    min-width="40%"
+                ></el-table-column>
+                <el-table-column prop="description" :label="$t('suite.description')" :show-overflow-tooltip="true" min-width="50%">
+                    <template slot-scope="props">
+                        <span
+                            v-if="$storage.getstorage('PLAY_LANG', 'EN') === 'EN'"
+                            style="margin-top: 5px;margin-bottom: 5px;"
+                        >{{props.row.description.en}}</span>
+                        <span
+                        v-else
+                        style="color:#111111;font-size:12px;margin-top: 2px;margin-bottom: 2px;"
+                        >{{props.row.description.zh}}</span>
+                    </template>
+
+                </el-table-column>
+            </el-table>
+            <div slot="footer">
+                <el-row>
+                    <el-col style="text-align:right">
+                        <el-button
+                            type="primary"
+                            plain
+                            class="closebutton"
+                        >
+                            {{$t('suite.submit')}}
+                        </el-button>
+                        <el-button
+                            type="primary"
+                            plain
+                            class="closebutton"
+                        >
+                            {{$t('suite.cancel')}}
+                        </el-button>
+                    </el-col>
                 </el-row>
             </div>
         </el-dialog>
@@ -359,7 +431,7 @@
 
 <script>
 import Sortable from 'sortablejs'
-import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation,getTestItem} from '@/api/config'
+import {getSuiteTable, deleteSuiteItem,getDeatilSuiteConfig,getsuitestation,getTestItem,getStationInfo} from '@/api/config'
 import {TimeForFormatter} from '@/utils/filters'
 import checkButtonPermission from '@/utils/button-permission'
 
@@ -404,6 +476,9 @@ export default {
 
             detail_suite_config_info:[],
             
+            //用于判断是更新还是创建
+            create_new_suite:true,
+
             //点击单元格是将id记录，用于查询详细信息,和进入编辑页面
             click_cell_name:'',
 
@@ -411,6 +486,8 @@ export default {
 
             leftSelectionItems:[],
             rigthSelectionItems:[],
+
+
 
             create_detail_suite_config_info:{
                 name:'',
@@ -420,7 +497,7 @@ export default {
 
 
 
-
+            show_confirm_suite_config:false,
             show_confirm_page:false, // 用于显示 确认提交的页面
             
             show_suite_config_delete:false,
@@ -440,6 +517,51 @@ export default {
         
     },
     methods:{
+        //当station改变后，从服务端查询对应站点的信息
+        stationChange(){
+            if(!this.create_new_suite && this.create_detail_suite_config_info.name.length !=0 ){
+                getStationInfo(this.create_detail_suite_config_info.name,this.create_detail_suite_config_info.station).then(response =>{
+                    this.create_detail_suite_config_info.suite = response.data.data
+                    this.setRightIndex()
+                })
+
+            }
+        },
+
+        //将配置的list清空
+        setConfigListToNull(){
+            this.create_detail_suite_config_info.suite = []
+        },
+        //创建suiteconfig
+        createsuiteconfig(){
+            console.log(this.create_detail_suite_config_info)
+            this.show_confirm_suite_config = true
+
+        },
+        //清空详情页面的信息
+        clearDetailInfo(){
+            this.detail_suite_config_info = []
+            this.click_cell_name = ''
+            this.show_detail_suite_config = false
+        },
+
+        //清空编辑页面的信息
+        clearEditInfo(){
+            this.$confirm('确认关闭？')
+            .then(() => {
+                this.create_detail_suite_config_info = {
+                    name:'',
+                    station:'',
+                    suite:[]
+                },
+                this.click_cell_name = ''
+                this.show_edit_suite_config = false,
+                this.create_new_suite = true
+                this.chioceForCopySuite = ''
+            })
+            .catch(() => {});
+        },
+
         //将选中item置底
         moveItemToBottom(){
             //将要置顶的item的index记录
@@ -493,7 +615,7 @@ export default {
             }
             this.create_detail_suite_config_info.suite = tmp_list    
         },
-        //每次右边表格数据变动之后都要调用该函数，对数据的index进行整理
+        //dialog加载后设置table为可拖动，当有输入过滤状态时，设置为不可拖动状态
         setsort(){
             this.el = document.querySelectorAll('.tablesortable > .el-table__body-wrapper > table >tbody')[0];
             // const _this = this
@@ -571,6 +693,13 @@ export default {
         //copySuite
         copySuite(){
             console.log(this.chioceForCopySuite)
+            if(this.chioceForCopySuite && this.create_detail_suite_config_info.station){
+                getStationInfo(this.chioceForCopySuite,this.create_detail_suite_config_info.station).then(response =>{
+                    this.create_detail_suite_config_info.suite = response.data.data
+                    this.setRightIndex()
+                })
+            }
+            
         },
         //输入建议
         querySearch(queryString, cb){
@@ -678,8 +807,15 @@ export default {
         // 弹出更改config的页面
         showEditSuiteConfig(val){
             // 如果val 有值就是change,没有就是create
+            this.show_detail_suite_config = false
             this.show_edit_suite_config = true
-            this.create_detail_suite_config_info['name'] = val
+            // val = clicl_cell_name 当click-cell-name没有值时说明是创建状态
+            if(val){
+                this.create_detail_suite_config_info['name'] = val
+                //标记是create状态，显示创建相关按钮
+                this.create_new_suite = false
+            }
+            
             //页面渲染后加载排序功能
             this.$nextTick(()=>{
                 this.setsort()

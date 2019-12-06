@@ -1,11 +1,12 @@
 <template>
     <div>
-        permission
+        userconfig
     </div>
 </template>
 
+
 <script>
 export default {
-    name:'permission'
+    name:'userconfig'
 }
 </script>

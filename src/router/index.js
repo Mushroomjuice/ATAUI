@@ -192,11 +192,18 @@ export const asyncRoutes = [
     component:Layout,
     
     meta:{title:'Permission',icon:'permission'},
-    children:[{
-      path:'',
-      component: () => import('@/views/permission/index.vue'),
-      meta:{title:'Permission'}
-    }]
+    children:[
+      {
+      path:'userconfig',
+      component: () => import('@/views/permission/userconfig/index.vue'),
+      meta:{title:'UserConfig'}
+      },
+      {
+        path:'rolesconfig',
+        component: () => import('@/views/permission/rolesconfig/index.vue'),
+        meta:{title:'RolesConfig'}
+      }
+  ]
   }
 ]
 

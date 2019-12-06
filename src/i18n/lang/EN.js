@@ -71,8 +71,10 @@ export const suite = {
     create_date:'Create_Date',
     create_user:'Create_User',
     delete:'Delete',
-
+    reset:'Reset',
     create:'Create',
+    update:'Update',
+    submit:'Submit',
 
 
     confirm_delete:'Do you want to delete this note?',
@@ -86,7 +88,7 @@ export const suite = {
     description:'Description',
     change:'Change',
     close:'Close',
-    submit:'submit',
+    
 
     station:'Station',
     copysuite:'Copy Suite',
@@ -98,4 +100,15 @@ export const suite = {
     
     
 
+}
+
+
+export const permission ={
+    create:'Create',
+    save:'Save',
+    close:'Close',
+
+    group:'group',
+    date:'Date',
+    user:'User'
 }

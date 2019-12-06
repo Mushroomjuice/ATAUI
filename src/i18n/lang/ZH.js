@@ -66,12 +66,15 @@ export const suite = {
     create_date:'创建时间',
     create_user:'创建用户',
     delete:'删除',
-
+    reset:'重置',
     create:'创建',
+    update:'更新',
+    submit:'提交',
+
 
     confirm_delete:'确认删除?',
     sure:'确认',
-    cancel:'删除',
+    cancel:'取消',
     delete_success:'删除成功!',
 
     test_sequence:'测试顺序',
@@ -79,7 +82,7 @@ export const suite = {
     description:'描述',
     change:'更改',
     close:'关闭',
-    submit:'确认',
+    
 
 
     station:'站点',
@@ -88,4 +91,14 @@ export const suite = {
 
     help:'帮助',
 
+}
+
+export const permission = {
+    create:'创建',
+    save:'保存',
+    close:'关闭',
+
+    group:'组',
+    date:'创建时间',
+    user:'用户'
 }

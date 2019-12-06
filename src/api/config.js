@@ -41,3 +41,10 @@ export function getTestItem(){
         method:'get'
     })
 }
+
+export function getStationInfo(name,station){
+    return request({
+        url:'/item_suite/test_suite/' + name +'/'+ station,
+        method:'get'
+    })
+}
