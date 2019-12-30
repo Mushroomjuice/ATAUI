@@ -102,3 +102,11 @@ export const permission = {
     date:'创建时间',
     user:'用户'
 }
+
+
+export const itemconfig = {
+    create:'创建',
+    save:'保存',
+    close:'关闭',
+    createtip:'创建测试项'
+}

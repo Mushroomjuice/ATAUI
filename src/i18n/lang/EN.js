@@ -112,3 +112,11 @@ export const permission ={
     date:'Date',
     user:'User'
 }
+
+
+export const itemconfig = {
+    create:'Create',
+    save:'Save',
+    close:'Close',
+    createtip:'Create New Item'
+}
